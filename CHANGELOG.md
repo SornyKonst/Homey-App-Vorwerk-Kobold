@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.4 — 2026-10-18
+
+- Correct the device icon's forward direction: the straight front now lies to the right of the rounded rear. Increase the visible body wall from 55 to 120 canvas pixels, with a matching lidar perspective.
+- Replace the 0.2.3 synthetic Store images after their housing proportions and grounding proved inadequate. The revised images show a fuller housing and connected wheel/contact shadows, with smaller front sensor surrounds and corrected SPOT/BASE/ECO, model and START labels.
+- Recheck the product references, actual Store thumbnails and SVG geometry. Generated images remain representations, not dimensional measurements or official product photography.
+- Runtime behavior, device identifiers and Flow definitions are unchanged.
+
+## 0.2.3 — 2026-10-18
+
+- Replace temporary Store illustrations with photorealistic, product-specific app and device images in all six Store sizes. Revise the app scene after checking the front sensors and thumbnail recognition.
+- Redraw the device icon as a flat D-shaped robot with a smaller rear lidar tower, a clear dust-bin lid and consistent perspective; review at 32, 48, 64 and 96 pixels.
+- Record image provenance and final generation prompts in ASSETS.txt. Runtime behavior, device identifiers and Flow definitions are unchanged.
+
 ## 0.2.2 — 2026-10-18
 
 - Retain the last confirmed model when a valid status response omits optional model metadata. Fresh explicit model data still takes precedence. Only a change in general-info support resets the additional-data interval.

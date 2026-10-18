@@ -17,6 +17,6 @@ https://www.vorwerk.com/de/de/c/home/landingpages/kobold/mykobold-app/vr300-vr20
 
 The original viewBox is `0 0 113.4 43.3`. Its path and polygon geometry is unchanged; the mark is rendered in black, scaled proportionally, and centered on a transparent 960 × 960 canvas. No third-party logo repository or invented logo was used. The mark belongs to Vorwerk and is not licensed under this project's MIT license. This notice records its source and does not grant trademark rights or imply endorsement.
 
-The VR300 driver icon and the PNG app/driver illustrations bundled in this project are independently drawn graphics. They are not Vorwerk marketing photographs. Official photograph candidates prepared outside the app directory are not bundled in this app and have no asserted App Store usage grant.
+The VR300 driver icon is independently drawn vector linework. The current PNG app/driver images were generated with OpenAI image generation on 2026-10-18, using public official VR300 photographs as product-shape references. They replace the earlier Magnific images. They are new synthetic product representations, not photographs of the user's robot and not official Vorwerk marketing assets. The image sources, generation prompts, review limitations and delivery dimensions are recorded in ASSETS.txt. Official reference photographs themselves are not bundled in this app.
 
 Vorwerk, Kobold, Homey and other product names belong to their respective owners. This community app is not affiliated with or endorsed by Vorwerk or Athom.

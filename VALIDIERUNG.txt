@@ -88,7 +88,7 @@ Vorbereitung für den Homey App Store:
 - Store-Texte auf jeweils zwei kurze reine Textabsätze ohne URLs und ohne vollständige Tasten-/Funktionsliste gekürzt. Nicht bestätigte VR200-Hardwarekompatibilität bleibt ausdrücklich benannt.
 - README.md und Datenschutzbeschreibung verweisen auf das vom Nutzer benannte öffentliche Repository SornyKonst/Homey-App-Vorwerk-Kobold und dessen GitHub-Issues. Supportmeldungen werden nicht automatisch versandt; öffentliche Berichte sollen keine Zugangsdaten oder identifizierenden Grundrisse enthalten.
 - Eigenständiges Geräteicon und Markenicon aus offizieller Quelle mit Herkunftshinweis.
-- Die Abmessungen der Rasterbilder sind korrekt. Die mitgelieferten gezeichneten App-/Gerätebilder bleiben ein Punkt für die gestalterische Prüfung. Fotovorschläge liegen separat; ihre Verwendung im öffentlichen Store ist nicht freigegeben.
+- Die bisherigen gezeichneten Rasterbilder wurden in 0.2.3 durch neue, mit Magnific erzeugte fotorealistische Produktbilder ersetzt: eigene Wohnraumszene und separates Gerät vor Weiß. Alle sechs Bildgrößen sind vorhanden. Originale Vorwerk-Fotos dienen nur als Formreferenzen und sind nicht eingebunden; Herkunft und finale Prompts stehen in ASSETS.txt. Die abschließende gestalterische Annahme liegt bei Athom.
 - Erreichbarkeit und Inhalt der öffentlichen Repository-/Supportlinks, tatsächlicher Herausgeber im Athom-Konto und Verfügbarkeit der unveränderten App-ID im Entwicklerportal sind vor Einreichung zu prüfen. Manifest-Autor und tatsächlicher Store-Herausgeber sind getrennte Angaben.
 - Kein Store-Upload, keine Testveröffentlichung, kein Zertifizierungsantrag und keine Veröffentlichung erfolgt. Eine bestandene publish-Prüfung ist keine Store-Freigabe.
 
@@ -113,3 +113,22 @@ Ergebnisse für 0.1.7:
 - Im echten Homey-Browser wurde die gespeicherte Karte ohne zusätzliche Bildschaltfläche automatisch geladen. Nach dem Aufklappen einer einzelnen Reinigung wurde auch deren Bild automatisch geladen; der Fokus blieb auf der Zusammenfassung des Eintrags. Beide Bildtypen waren vollständig geladen und besaßen gültige natürliche Bildabmessungen.
 - Keine Bewegungsbefehle während Update, Datenprüfungen und Sichtprüfung dieser Version. Frühere echte Reinigungsprüfungen wurden nicht wiederholt.
 - Die schmalen und dunklen Vorschauen ersetzen keinen Test auf einem echten Smartphone und keinen echten Homey-Designwechsel. Die allgemeinen Beta- und Store-Punkte oben bleiben offen. Es wurde keine Store-Freigabe oder weitergehende Rückwärtskompatibilität behauptet.
+
+Ergebnisse für 0.2.3:
+- Alle sechs Store-Bilder neu erstellt: fotorealistische Wohnraumszene und separates Produktbild vor Weiß. Form, reale Gerätedetails, Beschnitt und die tatsächlichen 75-/250-Pixel-Vorschauen geprüft. Nach Sichtprüfung wurden falsche Frontöffnungen im ersten Szenenentwurf korrigiert und das Gerät größer dargestellt.
+- Geräteicon zweimal überarbeitet: flacher D-Körper, kleiner rückwärtiger Laserturm, klare Deckelkontur und stimmige Perspektive. Transparente monochrome SVG auf 960 x 960, visuell bei 32/48/64/96 Pixeln und auf der echten Homey-Kachel geprüft. App-Markenicon bleibt eigenständig erhalten.
+- 214 von 214 vorhandenen App-Tests, alle zehn zusätzlichen statischen Prüfungen und die offizielle publish-Prüfung bestanden. Laufzeitcode und Flow-Definitionen sind gegenüber 0.2.2 unverändert; die drei Manifeste enthalten ausschließlich die neue Versionsnummer.
+- Auf Homey Self-Hosted 13.5.1 regulär installiert. Vorher/nachher: Gerät angedockt, 100 Prozent Akku. Bestehendes Gerät, Konto, Bereichsauswahl und alle 23 Fähigkeiten erhalten. Die Definitionen von drei normalen Flows und einem Advanced Flow sind unverändert; alle 14 vorhandenen Kartenverweise lösen auf.
+- Herkunft und finale Magnific-Prompts stehen in ASSETS.txt. Private Installations-/Prüfbelege und Homey-Screenshots liegen außerhalb des öffentlichen Quellordners.
+- Kein Bewegungsbefehl während Erzeugung, Installation oder Sichtprüfung. Die abschließende visuelle Annahme und Zertifizierung durch Athom bleiben offen.
+
+Nachprüfung der Grafikabnahme von 0.2.3:
+- Die damalige visuelle Bewertung war unzureichend. Die gezeichnete Front lag links vom Heck; die sichtbare Seitenwand war mit 55 Canvaspixeln zu niedrig. Die synthetischen Store-Bilder gaben Körperhöhe und Bodenkontakt nicht überzeugend wieder. Die technische publish-Prüfung hatte diese gestalterischen Mängel nicht geprüft.
+
+Ergebnisse für 0.2.4:
+- Icon in konsistenter räumlicher Projektion neu gezeichnet. Die Frontmitte liegt bei (652,562), der Heckscheitel bei (192,202): klare Rechtsausrichtung. Gehäusewand 120 statt 55 Pixel, Turm 32 Pixel über der Oberseite; die Werte sind Zeichenparameter, keine numerischen Homey-Vorgaben. Transparenter 960 × 960 Canvas, sichtbare Grenzen x 37–935 / y 127–842; keine abgeschnittenen Striche.
+- Neue synthetische Store-Bilder anhand echter Vorwerk-Drauf- und Schrägansicht erstellt. Gesamtbauhöhe von 9 cm einschließlich Turm als Produktreferenz, keine behauptete millimetergenaue Rekonstruktion. Radaufstand, angeschlossene Kontaktschatten, Frontsensoren, Bedienfeld und Modell-/Startbeschriftung gezielt kontrolliert und nachgebessert. Die vorherigen Magnific-Bilder sind ersetzt.
+- Volle Bilder und echte 75-/250-Pixel-Ausgaben sowie Icons bei 32/48/64/96 Pixeln angesehen. Die reale Homey-Gerätekachel zeigt die neue Rechtsansicht. Die technische Freigabe ersetzt keine subjektive gestalterische Abnahme.
+- Offizielle publish-Prüfung und alle zehn statischen Vorprüfungen bestanden. Quellcode der Laufzeit und Flow-Definitionen unverändert.
+- Regulär auf Homey installiert. Gerät, Konto, Bereichsauswahl, 23 Fähigkeiten, drei normale Flows und ein Advanced Flow erhalten; alle 14 Kartenverweise lösen auf. Der erste Abruf unmittelbar nach Neustart hatte noch keinen Verlauf; nach Abschluss der Startabfrage waren wieder 20 Einträge verfügbar, ohne erneute Anmeldung.
+- Keine Bewegungsbefehle, keine ausgeführten Nutzer-Flows und keine Git-Commits oder Pushes. Bildquellen und vollständige Prompts in ASSETS.txt. Die endgültige visuelle Store-Annahme entscheidet Athom.

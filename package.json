@@ -1,6 +1,6 @@
 {
   "name": "community.kobold.vr300",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "Community Homey app for Vorwerk Kobold VR200 and VR300 robot vacuums",
   "private": true,
   "main": "app.js",
