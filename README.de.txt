@@ -1,0 +1,3 @@
+Lass deinen Kobold VR200 oder VR300 passend zu deinem Alltag reinigen. Prüfe Status und Akku und stimme die Reinigung mit Homey-Flows ab. Beim VR300 kannst du gespeicherte Bereiche auswählen und Reinigungsergebnisse mit Karten ansehen. Die verfügbaren Funktionen richten sich nach dem erkannten Modell. Die VR200-Kompatibilität ist noch nicht an einem echten Gerät bestätigt.
+
+Melde dich mit deiner MyKobold-E-Mail-Adresse und einem Einmalcode an. Benötigt werden ein verbundener Roboter, Internetzugang und Homey ab 12.9.0. Verbindungsdaten bleiben privat auf Homey. Diese unabhängige Community-App nutzt eine inoffizielle Cloud-Schnittstelle und steht in keiner Verbindung zu Vorwerk. Karten und Zeitpläne verwaltest du in MyKobold.

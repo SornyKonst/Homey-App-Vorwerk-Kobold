@@ -1,0 +1,213 @@
+<style>
+  #kobold-login { max-width: 460px; margin: 0 auto; padding: 16px 14px 28px; color: #26332c; background: #fff; border-radius: 12px; overflow-wrap: anywhere; font-size: 14px; line-height: 1.5; }
+  #kobold-login p { line-height: 1.55; }
+  #kobold-login label { font-size: 14px; color: inherit; text-transform: none; letter-spacing: normal; line-height: 1.5; display: block; font-weight: 600; margin: 20px 0 8px; }
+  #kobold-login input { box-sizing: border-box; width: 100%; min-height: 48px; padding: 12px; border: 1px solid #8a9a92; border-radius: 8px; font: inherit; font-size: 16px; color: inherit; background: transparent; }
+  #kobold-login button { box-sizing: border-box; width: 100%; min-height: 48px; margin-top: 14px; padding: 12px 16px; border: 1px solid #007a53; border-radius: 8px; background: #007a53; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  #kobold-login button.secondary { border-color: #8a9a92; color: inherit; background: transparent; font-weight: 500; }
+  #kobold-login button:disabled { opacity: .55; cursor: default; }
+  #kobold-login :focus-visible { outline: 3px solid #007a53; outline-offset: 3px; }
+  #kobold-login [hidden] { display: none !important; }
+  #kobold-login .status, #kobold-login .error { min-height: 1.5em; }
+  #kobold-login .error { color: #b42318; }
+  #kobold-login .hint, #kobold-login .note { font-size: .9em; opacity: .82; }
+  #kobold-login .hint { margin-top: 8px; }
+  #kobold-login .note { margin-top: 24px; }
+  #kobold-login .recipient { display: block; margin-top: 4px; }
+  @media (prefers-color-scheme: dark) {
+    #kobold-login { color: #edf3ef; background: #202722; }
+    #kobold-login input, #kobold-login button.secondary { border-color: #9bafa4; }
+    #kobold-login :focus-visible { outline-color: #66d3a4; }
+    #kobold-login .error { color: #ffb4ab; }
+  }
+</style>
+<div class="kobold-login" id="kobold-login" aria-busy="false">
+  <p id="intro"></p>
+  <p id="status" class="status" role="status" aria-live="polite" aria-atomic="true"></p>
+  <form id="email-form">
+    <label for="email" id="email-label"></label>
+    <input id="email" type="email" name="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="email-hint" required maxlength="320">
+    <p id="email-hint" class="hint"></p>
+    <button type="submit" id="request-code"></button>
+  </form>
+  <form id="code-form" hidden>
+    <div id="code-fields">
+      <p id="sent"><span id="sent-label"></span><strong id="sent-email" class="recipient"></strong></p>
+      <label for="code" id="code-label"></label>
+      <input id="code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" autocapitalize="none" spellcheck="false" aria-describedby="code-hint" pattern="[0-9]{4,12}" minlength="4" maxlength="12" required>
+      <p id="code-hint" class="hint"></p>
+    </div>
+    <button type="submit" id="verify-code"></button>
+    <div id="code-actions">
+      <button type="button" id="resend-code" class="secondary"></button>
+      <button type="button" id="change-email" class="secondary"></button>
+    </div>
+  </form>
+  <p id="cooldown" class="hint" aria-live="off" hidden></p>
+  <p id="error" class="error" role="alert" aria-live="assertive" aria-atomic="true"></p>
+  <p id="note" class="note"></p>
+</div>
+<script>
+  (function () {
+    'use strict';
+    var repairing = true;
+    var $ = function (id) { return document.getElementById(id); };
+    var busy = false;
+    var closed = false;
+    var finished = false;
+    var verified = false;
+    var requestedEmail = '';
+    var retryAt = 0;
+    var timer = null;
+    var pendingAction = '';
+    Homey.setTitle(Homey.__(repairing ? 'pair.repair_title' : 'pair.add_title'));
+    $('intro').textContent = Homey.__(repairing ? 'pair.repair_intro' : 'pair.add_intro');
+    ['email-label', 'code-label', 'email-hint', 'code-hint', 'resend-code', 'change-email', 'sent-label', 'note'].forEach(function (id) {
+      $(id).textContent = Homey.__('pair.' + id.replace(/-/g, '_'));
+    });
+
+    function secondsRemaining() { return Math.max(0, Math.ceil((retryAt - Date.now()) / 1000)); }
+    function render() {
+      var remaining = secondsRemaining();
+      $('kobold-login').setAttribute('aria-busy', busy ? 'true' : 'false');
+      $('request-code').disabled = busy || finished || remaining > 0;
+      $('resend-code').disabled = busy || finished || verified || !requestedEmail || remaining > 0;
+      $('verify-code').disabled = busy || finished || (!requestedEmail && !verified);
+      $('change-email').disabled = busy || finished;
+      $('email').disabled = busy || finished || verified;
+      $('code').disabled = busy || finished || verified;
+      $('code-fields').hidden = verified;
+      $('code-actions').hidden = verified;
+      $('request-code').textContent = Homey.__(pendingAction === 'send' ? 'pair.sending' : 'pair.send_code');
+      $('resend-code').textContent = Homey.__(pendingAction === 'resend' ? 'pair.sending' : 'pair.resend_code');
+      $('verify-code').textContent = Homey.__(pendingAction === 'verify' ? 'pair.verifying'
+        : verified ? 'pair.continue' : repairing ? 'pair.repair_verify' : 'pair.add_verify');
+      $('cooldown').hidden = remaining === 0 || finished || verified;
+      $('cooldown').textContent = remaining > 0
+        ? Homey.__('pair.wait_seconds').replace('{seconds}', String(remaining)) : '';
+      if (timer !== null) window.clearTimeout(timer);
+      timer = !finished && !verified && remaining > 0 ? window.setTimeout(render, 1000) : null;
+    }
+    function setBusy(value, action) {
+      busy = value;
+      pendingAction = value ? action : '';
+      render();
+    }
+    function showError(error) {
+      var message = error && typeof error.message === 'string' ? error.message
+        : typeof error === 'string' ? error : Homey.__('errors.login_failed');
+      $('error').textContent = message;
+      return message;
+    }
+    function clearInputs() {
+      $('email').value = '';
+      $('code').value = '';
+      $('sent-email').textContent = '';
+      requestedEmail = '';
+    }
+    async function requestCode(email, resending) {
+      if (closed || busy || finished || verified || secondsRemaining() > 0) return;
+      $('error').textContent = '';
+      $('status').textContent = Homey.__('pair.sending');
+      $('code').value = '';
+      setBusy(true, resending ? 'resend' : 'send');
+      try {
+        await Homey.emit('request_code', { email: email });
+        if (closed) return;
+        requestedEmail = email;
+        retryAt = Date.now() + 30000;
+        $('email').value = email;
+        $('sent-email').textContent = email;
+        $('code').value = '';
+        $('email-form').hidden = true;
+        $('code-form').hidden = false;
+        $('status').textContent = Homey.__(resending ? 'pair.code_resent' : 'pair.code_requested');
+      } catch (error) {
+        if (closed) return;
+        if (showError(error) === Homey.__('errors.wait_before_retry')) retryAt = Date.now() + 30000;
+        $('status').textContent = '';
+      } finally {
+        if (!closed) {
+          setBusy(false);
+          if (!$('code-form').hidden) $('code').focus();
+          else $('email').focus();
+        }
+      }
+    }
+    async function finishConnection() {
+      if (closed) return;
+      setBusy(true, 'navigate');
+      $('error').textContent = '';
+      try {
+        if (repairing) await Homey.done();
+        else await Homey.showView('list_devices');
+        finished = true;
+      } catch (error) {
+        if (!closed) $('error').textContent = Homey.__('pair.next_failed');
+      } finally {
+        if (!closed) {
+          setBusy(false);
+          if (!finished) $('verify-code').focus();
+        }
+      }
+    }
+    $('email-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      if (closed || busy || finished || $('email-form').hidden || !$('email-form').reportValidity()) return;
+      await requestCode($('email').value.trim().toLowerCase(), false);
+    });
+    $('resend-code').addEventListener('click', async function () {
+      if (!requestedEmail) return;
+      await requestCode(requestedEmail, true);
+    });
+    $('change-email').addEventListener('click', function () {
+      if (closed || busy || finished || verified) return;
+      requestedEmail = '';
+      $('code').value = '';
+      $('sent-email').textContent = '';
+      $('code-form').hidden = true;
+      $('email-form').hidden = false;
+      $('error').textContent = '';
+      $('status').textContent = Homey.__('pair.change_email_hint');
+      render();
+      $('email').focus();
+    });
+    $('code-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      if (closed || busy || finished) return;
+      if (verified) { await finishConnection(); return; }
+      if (!requestedEmail || !$('code-form').reportValidity()) return;
+      $('error').textContent = '';
+      $('status').textContent = Homey.__('pair.verifying');
+      var code = $('code').value.trim();
+      $('code').value = '';
+      setBusy(true, 'verify');
+      try {
+        var result = await Homey.emit('verify_code', { code: code });
+        if (closed) return;
+        if (!result || result.repaired !== repairing) throw new Error(Homey.__('errors.login_failed'));
+        verified = true;
+        clearInputs();
+        $('status').textContent = Homey.__(repairing ? 'pair.reconnected' : 'pair.verified');
+      } catch (error) {
+        if (!closed) {
+          showError(error);
+          $('status').textContent = '';
+        }
+      } finally {
+        code = '';
+        if (!closed) setBusy(false);
+      }
+      if (closed) return;
+      if (verified) await finishConnection();
+      else $('code').focus();
+    });
+    window.addEventListener('pagehide', function () {
+      closed = true;
+      finished = true;
+      if (timer !== null) window.clearTimeout(timer);
+      clearInputs();
+    });
+    render();
+  }());
+</script>

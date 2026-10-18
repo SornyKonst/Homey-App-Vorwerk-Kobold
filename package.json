@@ -1,0 +1,25 @@
+{
+  "name": "community.kobold.vr300",
+  "version": "0.2.2",
+  "description": "Community Homey app for Vorwerk Kobold VR200 and VR300 robot vacuums",
+  "private": true,
+  "main": "app.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "validate": "homey app validate",
+    "install:homey": "homey app install"
+  },
+  "author": "Lindner IT Solutions",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold.git"
+  },
+  "homepage": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold",
+  "bugs": {
+    "url": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold/issues"
+  },
+  "license": "MIT"
+}

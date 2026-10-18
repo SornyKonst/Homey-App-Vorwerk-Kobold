@@ -1,0 +1,9 @@
+test/
+README.md
+NOTICE.md
+VALIDIERUNG.txt
+*.zip
+.git/
+.github/
+.gitignore
+scripts/

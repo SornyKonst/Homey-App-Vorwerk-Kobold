@@ -1,0 +1,17 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Latest cleaned area",
+    "de": "Zuletzt gereinigte Fläche"
+  },
+  "units": {
+    "en": "m²",
+    "de": "m²"
+  },
+  "decimals": 1,
+  "min": 0,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}

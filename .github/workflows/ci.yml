@@ -1,0 +1,62 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      # The app and its mocked tests have no npm dependencies or account access.
+      - name: Run offline unit and integration tests
+        run: npm test
+
+  validate:
+    name: Homey publish validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HOMEY_HEADLESS: '1'
+      HOMEY_SKIP_STARTUP_NOTIFIERS: '1'
+      HOMEY_HOME: /tmp/homey-empty-profile
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Homey CLI 4.6.0 itself requires Node >=24; the app supports Node 22.
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install the pinned official Homey CLI outside the app
+        run: npm install --prefix "$RUNNER_TEMP/homey-cli" --no-audit --no-fund --package-lock=false homey@4.6.0
+      - name: Check source metadata, translations and package boundaries
+        run: node scripts/store-preflight.cjs
+      - name: Compose the app and validate for publishing without signing in
+        run: node "$RUNNER_TEMP/homey-cli/node_modules/homey/bin/homey.mjs" app validate --level publish
+      - name: Ensure the generated manifest was committed
+        run: git diff --exit-code -- app.json package.json .homeycompose
+      - name: Check the generated package contents
+        run: node scripts/store-preflight.cjs

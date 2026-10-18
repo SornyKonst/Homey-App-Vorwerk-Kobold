@@ -1,0 +1,33 @@
+{
+  "title": {
+    "en": "Clean an area",
+    "de": "Bereich reinigen"
+  },
+  "titleFormatted": {
+    "en": "Clean [[area]]",
+    "de": "Reinige [[area]]"
+  },
+  "hint": {
+    "en": "Starts a new cleaning job from the charging station in a saved MyKobold area. Stop any running or paused job first.",
+    "de": "Startet eine neue Reinigung von der Ladestation aus in einem gespeicherten MyKobold-Bereich. Stoppe zuerst einen laufenden oder pausierten Auftrag."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=vr300&capabilities=kobold_area"
+    },
+    {
+      "name": "area",
+      "type": "autocomplete",
+      "title": {
+        "en": "Area",
+        "de": "Bereich"
+      },
+      "placeholder": {
+        "en": "Choose an area",
+        "de": "Bereich auswählen"
+      }
+    }
+  ]
+}

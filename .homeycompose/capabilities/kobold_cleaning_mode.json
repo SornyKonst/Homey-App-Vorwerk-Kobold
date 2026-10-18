@@ -1,0 +1,27 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Last reported cleaning mode",
+    "de": "Zuletzt gemeldeter Reinigungsmodus"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg",
+  "values": [
+    {
+      "id": "eco",
+      "title": {
+        "en": "Eco",
+        "de": "Eco"
+      }
+    },
+    {
+      "id": "turbo",
+      "title": {
+        "en": "Turbo",
+        "de": "Turbo"
+      }
+    }
+  ]
+}

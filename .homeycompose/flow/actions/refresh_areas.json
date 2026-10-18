@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Refresh available areas",
+    "de": "Verfügbare Bereiche aktualisieren"
+  },
+  "hint": {
+    "en": "Reads the areas saved in MyKobold without starting the robot.",
+    "de": "Liest die in MyKobold gespeicherten Bereiche neu ein, ohne eine Reinigung zu starten."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=vr300&capabilities=kobold_area"
+    }
+  ]
+}

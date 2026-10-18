@@ -1,0 +1,77 @@
+name: Upload Homey draft
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact app version to upload as a draft (must match this commit)
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homey-draft-upload
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    name: Upload a draft for manual review
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HOMEY_HEADLESS: '1'
+      HOMEY_SKIP_STARTUP_NOTIFIERS: '1'
+      HOMEY_HOME: /tmp/homey-empty-profile
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify the selected version and its committed release notes
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const read = name => JSON.parse(fs.readFileSync(name, 'utf8'));
+          const version = process.env.EXPECTED_VERSION;
+          assert.match(version, /^\d+\.\d+\.\d+$/);
+          assert.equal(read('app.json').version, version, 'The selected version does not match this commit.');
+          assert.equal(read('.homeycompose/app.json').version, version);
+          assert.equal(read('package.json').version, version);
+          assert.ok(read('.homeychangelog.json')[version]?.en?.trim().length >= 4, 'Use the version workflow or commit English Homey release notes first.');
+          assert.equal(fs.existsSync('env.json'), false, 'A public release must not upload local Homey environment values.');
+          NODE
+      - name: Install the pinned official Homey CLI outside the app
+        run: npm install --prefix "$RUNNER_TEMP/homey-cli" --no-audit --no-fund --package-lock=false homey@4.6.0
+      - name: Run offline tests and publish validation
+        run: |
+          npm test
+          node scripts/store-preflight.cjs
+          node "$RUNNER_TEMP/homey-cli/node_modules/homey/bin/homey.mjs" app validate --level publish
+          git diff --exit-code -- app.json package.json .homeycompose
+          node scripts/store-preflight.cjs
+      - name: Upload this version as a draft only
+        env:
+          HOMEY_PAT: ${{ secrets.HOMEY_PAT }}
+        run: |
+          if [ -z "$HOMEY_PAT" ]; then
+            echo 'Add the app owner Homey personal access token as the repository Actions secret HOMEY_PAT.' >&2
+            exit 1
+          fi
+          test ! -e env.json
+          node "$RUNNER_TEMP/homey-cli/node_modules/homey/bin/homey.mjs" app publish
+      - name: Show where to review the draft
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const { id } = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Draft uploaded for review: https://tools.developer.homey.app/apps/app/${encodeURIComponent(id)}\n\nTesting, certification and live publication are separate manual steps.\n`);
+          NODE

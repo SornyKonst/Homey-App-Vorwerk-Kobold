@@ -1,0 +1,605 @@
+{
+  "actions": [
+    {
+      "id": "start_cleaning",
+      "title": {
+        "en": "Start cleaning",
+        "de": "Reinigung starten"
+      },
+      "hint": {
+        "en": "Starts a cleaning or resumes a paused cleaning job.",
+        "de": "Startet eine Reinigung oder setzt eine pausierte Reinigung fort."
+      }
+    },
+    {
+      "id": "pause_cleaning",
+      "title": {
+        "en": "Pause cleaning",
+        "de": "Reinigung pausieren"
+      },
+      "hint": {
+        "en": "Pauses the current job so it can be resumed later.",
+        "de": "Pausiert den laufenden Auftrag, damit er später fortgesetzt werden kann."
+      }
+    },
+    {
+      "id": "resume_cleaning",
+      "title": {
+        "en": "Resume cleaning",
+        "de": "Reinigung fortsetzen"
+      },
+      "hint": {
+        "en": "Resumes a paused job. Does not start a new job.",
+        "de": "Setzt einen pausierten Auftrag fort. Startet keinen neuen Auftrag."
+      }
+    },
+    {
+      "id": "stop_cleaning",
+      "title": {
+        "en": "Stop cleaning",
+        "de": "Reinigung stoppen"
+      },
+      "hint": {
+        "en": "Stops the current job. Use Pause cleaning if you want to resume it later.",
+        "de": "Stoppt den laufenden Auftrag. Verwende zum späteren Fortsetzen stattdessen Reinigung pausieren."
+      }
+    },
+    {
+      "id": "return_to_base",
+      "title": {
+        "en": "Return to charging station",
+        "de": "Zur Ladestation zurückkehren"
+      },
+      "hint": {
+        "en": "Pauses an active cleaning first if the robot requires it, then requests a return to the station.",
+        "de": "Pausiert bei Bedarf zuerst die laufende Reinigung und fordert dann die Rückkehr zur Station an."
+      }
+    },
+    {
+      "id": "refresh_status",
+      "title": {
+        "en": "Refresh robot status",
+        "de": "Roboterstatus aktualisieren"
+      },
+      "hint": {
+        "en": "Reads the current robot status without starting a cleaning.",
+        "de": "Liest den aktuellen Roboterstatus, ohne eine Reinigung zu starten."
+      }
+    },
+    {
+      "id": "refresh_robot_data",
+      "title": {
+        "en": "Refresh additional robot data",
+        "de": "Zusätzliche Roboterdaten aktualisieren"
+      },
+      "hint": {
+        "en": "Only reads status, device information and the existing robot schedule. Does not start cleaning or change settings.",
+        "de": "Liest nur Status, Geräteinformationen und den bestehenden Roboterzeitplan. Startet keine Reinigung und verändert keine Einstellungen."
+      }
+    },
+    {
+      "id": "refresh_history",
+      "title": {
+        "en": "Refresh cleaning history and maps",
+        "de": "Reinigungsverlauf und Karten aktualisieren"
+      },
+      "hint": {
+        "en": "Only reads the cloud account. Does not start or change a cleaning.",
+        "de": "Liest nur das Cloud-Konto. Startet oder verändert keine Reinigung."
+      },
+      "$filter": "capabilities=kobold_last_cleaned_area"
+    },
+    {
+      "id": "clean",
+      "highlight": true,
+      "title": {
+        "en": "Start cleaning",
+        "de": "Mit Staubsaugen anfangen"
+      },
+      "deprecated": true
+    },
+    {
+      "id": "spot_clean",
+      "title": {
+        "en": "Start spot cleaning",
+        "de": "Mit Spot-Reinigung anfangen"
+      },
+      "deprecated": true
+    },
+    {
+      "id": "dock",
+      "highlight": true,
+      "title": {
+        "en": "Return to dock",
+        "de": "Zu Ladestation zurückkehren"
+      },
+      "deprecated": true
+    },
+    {
+      "id": "stop",
+      "highlight": true,
+      "title": {
+        "en": "Stop",
+        "de": "Stop"
+      },
+      "deprecated": true
+    }
+  ],
+  "triggers": [
+    {
+      "id": "cleaning_started",
+      "title": {
+        "en": "Cleaning started",
+        "de": "Die Reinigung wurde gestartet"
+      }
+    },
+    {
+      "id": "cleaning_finished",
+      "title": {
+        "en": "Cleaning ended at the station",
+        "de": "Die Reinigung ist an der Station beendet"
+      },
+      "hint": {
+        "en": "Runs when the robot is docked after an observed cleaning, including manual return. This does not confirm that the entire cleaning completed successfully.",
+        "de": "Wird ausgelöst, wenn der Roboter nach einer beobachteten Reinigung an der Station ist, auch bei manueller Rückkehr. Dies bestätigt keine vollständig erfolgreiche Reinigung."
+      }
+    },
+    {
+      "id": "robot_error",
+      "title": {
+        "en": "The robot reports an error",
+        "de": "Der Roboter meldet einen Fehler"
+      },
+      "tokens": [
+        {
+          "name": "message",
+          "type": "string",
+          "title": {
+            "en": "Error message",
+            "de": "Fehlermeldung"
+          }
+        }
+      ]
+    },
+    {
+      "id": "state_changed",
+      "title": {
+        "en": "Robot status changed",
+        "de": "Der Roboterstatus hat sich geändert"
+      },
+      "tokens": [
+        {
+          "name": "state",
+          "type": "string",
+          "title": {
+            "en": "State code",
+            "de": "Zustandscode"
+          }
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "title": {
+            "en": "Status description",
+            "de": "Statusbeschreibung"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cleaning_mode_changed",
+      "title": {
+        "en": "A reported mode changed",
+        "de": "Ein gemeldeter Modus hat sich geändert"
+      },
+      "hint": {
+        "en": "Reports a change to the cleaning or navigation setting. These settings may describe the last job while the robot is idle.",
+        "de": "Meldet eine Änderung der Reinigungs- oder Navigationseinstellung. Im Ruhezustand können diese Werte den letzten Auftrag beschreiben."
+      },
+      "tokens": [
+        {
+          "name": "mode",
+          "type": "string",
+          "title": {
+            "en": "Last reported cleaning mode",
+            "de": "Zuletzt gemeldeter Reinigungsmodus"
+          }
+        },
+        {
+          "name": "navigation",
+          "type": "string",
+          "title": {
+            "en": "Last reported navigation mode",
+            "de": "Zuletzt gemeldeter Navigationsmodus"
+          }
+        }
+      ]
+    },
+    {
+      "id": "robot_schedule_changed",
+      "title": {
+        "en": "The robot schedule activation changed",
+        "de": "Die Aktivierung des Roboterzeitplans hat sich geändert"
+      },
+      "tokens": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "title": {
+            "en": "Enabled",
+            "de": "Aktiviert"
+          }
+        }
+      ]
+    },
+    {
+      "id": "robot_warning_changed",
+      "title": {
+        "en": "The robot notice changed",
+        "de": "Der Roboterhinweis hat sich geändert"
+      },
+      "tokens": [
+        {
+          "name": "code",
+          "type": "string",
+          "title": {
+            "en": "Notice code",
+            "de": "Hinweiscode"
+          }
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "title": {
+            "en": "Notice",
+            "de": "Hinweis"
+          }
+        }
+      ]
+    },
+    {
+      "id": "history_entry_added",
+      "title": {
+        "en": "A history entry was added",
+        "de": "Ein Verlaufseintrag wurde hinzugefügt"
+      },
+      "hint": {
+        "en": "The first cleaning-history import after connecting or restarting does not trigger this card. Elapsed time includes pauses and charging. Area and elapsed-time tokens are empty if unknown.",
+        "de": "Der erste Import des Reinigungsverlaufs nach Anmeldung oder Neustart löst diese Karte nicht aus. Die Gesamtdauer enthält Pausen und Ladeunterbrechungen. Fläche und Dauer sind leer, wenn unbekannt."
+      },
+      "tokens": [
+        {
+          "name": "started_at",
+          "type": "string",
+          "title": {
+            "en": "Start time",
+            "de": "Beginn"
+          }
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "title": {
+            "en": "History status code",
+            "de": "Statuscode im Verlauf"
+          }
+        },
+        {
+          "name": "area",
+          "type": "string",
+          "title": {
+            "en": "Cleaned area (m²)",
+            "de": "Gereinigte Fläche (m²)"
+          }
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "title": {
+            "en": "Elapsed time (min)",
+            "de": "Gesamtdauer (min)"
+          }
+        }
+      ],
+      "$filter": "capabilities=kobold_last_cleaned_area"
+    },
+    {
+      "id": "vacuumcleaner_state_changed",
+      "title": {
+        "en": "The state changed to...",
+        "de": "Der Status hat sich geändert auf..."
+      },
+      "args": [
+        {
+          "name": "state",
+          "type": "dropdown",
+          "values": [
+            {
+              "id": "cleaning",
+              "label": {
+                "en": "Cleaning",
+                "de": "Staubsaugen"
+              }
+            },
+            {
+              "id": "spot_cleaning",
+              "label": {
+                "en": "Spot cleaning",
+                "de": "Spot-Reinigung"
+              }
+            },
+            {
+              "id": "docked",
+              "label": {
+                "en": "Docked",
+                "de": "An Ladestation"
+              }
+            },
+            {
+              "id": "charging",
+              "label": {
+                "en": "Charging",
+                "de": "Lädt auf"
+              }
+            },
+            {
+              "id": "stopped",
+              "label": {
+                "en": "Stopped",
+                "de": "Gestoppt"
+              }
+            }
+          ],
+          "title": {
+            "en": "State",
+            "de": "Zustand"
+          }
+        }
+      ],
+      "deprecated": true,
+      "titleFormatted": {
+        "en": "The state changed to [[state]]",
+        "de": "Der Status hat sich auf [[state]] geändert"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "id": "is_cleaning",
+      "title": {
+        "en": "The robot !{{is|is not}} cleaning",
+        "de": "Der Roboter !{{reinigt|reinigt nicht}}"
+      }
+    },
+    {
+      "id": "is_docked",
+      "title": {
+        "en": "The robot !{{is|is not}} at the charging station",
+        "de": "Der Roboter !{{ist|ist nicht}} an der Ladestation"
+      }
+    },
+    {
+      "id": "is_charging",
+      "title": {
+        "en": "The robot !{{is|is not}} charging",
+        "de": "Der Roboter !{{lädt|lädt nicht}}"
+      }
+    },
+    {
+      "id": "is_eco_mode",
+      "title": {
+        "en": "The last reported mode !{{is|is not}} Eco",
+        "de": "Der zuletzt gemeldete Modus !{{ist|ist nicht}} Eco"
+      }
+    },
+    {
+      "id": "is_robot_schedule_enabled",
+      "title": {
+        "en": "The robot schedule !{{is|is not}} enabled",
+        "de": "Der Roboterzeitplan !{{ist|ist nicht}} aktiviert"
+      }
+    },
+    {
+      "id": "has_robot_warning",
+      "title": {
+        "en": "The robot !{{has a|has no}} notice",
+        "de": "Der Roboter !{{meldet einen|meldet keinen}} Hinweis"
+      }
+    },
+    {
+      "id": "navigation_is",
+      "title": {
+        "en": "The last reported navigation mode !{{is|is not}} [[mode]]",
+        "de": "Der zuletzt gemeldete Navigationsmodus !{{ist|ist nicht}} [[mode]]"
+      },
+      "args": [
+        {
+          "name": "mode",
+          "type": "dropdown",
+          "title": {
+            "en": "Mode",
+            "de": "Modus"
+          },
+          "values": [
+            {
+              "id": "normal",
+              "label": {
+                "en": "Normal",
+                "de": "Normal"
+              }
+            },
+            {
+              "id": "extra_care",
+              "label": {
+                "en": "Extra care",
+                "de": "Besonders vorsichtig"
+              }
+            },
+            {
+              "id": "deep",
+              "label": {
+                "en": "Deep",
+                "de": "Gründlich"
+              }
+            }
+          ]
+        }
+      ],
+      "titleFormatted": {
+        "en": "The last reported navigation mode !{{is|is not}} [[mode]]",
+        "de": "Der zuletzt gemeldete Navigationsmodus !{{ist|ist nicht}} [[mode]]"
+      },
+      "$filter": "capabilities=kobold_navigation_mode"
+    },
+    {
+      "id": "charge_count_above",
+      "title": {
+        "en": "The charge counter !{{is|is not}} above [[count]]",
+        "de": "Der Ladezähler !{{liegt|liegt nicht}} über [[count]]"
+      },
+      "hint": {
+        "en": "The counter reported by the robot is not a verified number of full charge cycles.",
+        "de": "Der vom Roboter gemeldete Zähler ist keine bestätigte Anzahl vollständiger Ladezyklen."
+      },
+      "args": [
+        {
+          "name": "count",
+          "type": "number",
+          "title": {
+            "en": "Counter value",
+            "de": "Zählerstand"
+          },
+          "min": 0,
+          "max": 1000000000,
+          "step": 1
+        }
+      ],
+      "titleFormatted": {
+        "en": "The charge counter !{{is|is not}} above [[count]]",
+        "de": "Der Ladezähler !{{liegt|liegt nicht}} über [[count]]"
+      },
+      "$filter": "capabilities=kobold_charge_count"
+    },
+    {
+      "id": "last_cleaned_area_above",
+      "title": {
+        "en": "The latest cleaned area !{{is|is not}} above [[area]] m²",
+        "de": "Die zuletzt gereinigte Fläche !{{liegt|liegt nicht}} über [[area]] m²"
+      },
+      "args": [
+        {
+          "name": "area",
+          "type": "number",
+          "title": {
+            "en": "Area",
+            "de": "Fläche"
+          },
+          "min": 0,
+          "max": 10000000,
+          "step": 0.1
+        }
+      ],
+      "titleFormatted": {
+        "en": "The latest cleaned area !{{is|is not}} above [[area]] m²",
+        "de": "Die zuletzt gereinigte Fläche !{{liegt|liegt nicht}} über [[area]] m²"
+      },
+      "$filter": "capabilities=kobold_last_cleaned_area"
+    },
+    {
+      "id": "last_duration_above",
+      "title": {
+        "en": "The last run !{{lasted|did not last}} more than [[minutes]] minutes",
+        "de": "Der letzte Lauf !{{dauerte|dauerte nicht}} länger als [[minutes]] Minuten"
+      },
+      "hint": {
+        "en": "Elapsed time from start to end, including pauses and charging.",
+        "de": "Zeit von Beginn bis Ende, einschließlich Pausen und Ladeunterbrechungen."
+      },
+      "args": [
+        {
+          "name": "minutes",
+          "type": "number",
+          "title": {
+            "en": "Minutes",
+            "de": "Minuten"
+          },
+          "min": 0,
+          "max": 1000000,
+          "step": 0.1
+        }
+      ],
+      "titleFormatted": {
+        "en": "The last run !{{lasted|did not last}} more than [[minutes]] minutes",
+        "de": "Der letzte Lauf !{{dauerte|dauerte nicht}} länger als [[minutes]] Minuten"
+      },
+      "$filter": "capabilities=kobold_last_duration"
+    },
+    {
+      "id": "last_cleaning_successful",
+      "title": {
+        "en": "The latest cleaning !{{was|was not}} reported as successful",
+        "de": "Die letzte Reinigung !{{wurde|wurde nicht}} als erfolgreich gemeldet"
+      },
+      "$filter": "capabilities=kobold_last_cleaning"
+    },
+    {
+      "id": "vacuumcleaner_state_is",
+      "title": {
+        "en": "The vacuum cleaner !{{is|is not}}",
+        "de": "Der Staubsauger !{{ist|ist nicht}}"
+      },
+      "args": [
+        {
+          "name": "state",
+          "type": "dropdown",
+          "values": [
+            {
+              "id": "cleaning",
+              "label": {
+                "en": "Cleaning",
+                "de": "Staubsaugen"
+              }
+            },
+            {
+              "id": "spot_cleaning",
+              "label": {
+                "en": "Spot cleaning",
+                "de": "Spot-Reinigung"
+              }
+            },
+            {
+              "id": "docked",
+              "label": {
+                "en": "Docked",
+                "de": "An Ladestation"
+              }
+            },
+            {
+              "id": "charging",
+              "label": {
+                "en": "Charging",
+                "de": "Lädt auf"
+              }
+            },
+            {
+              "id": "stopped",
+              "label": {
+                "en": "Stopped",
+                "de": "Gestoppt"
+              }
+            }
+          ],
+          "title": {
+            "en": "State",
+            "de": "Zustand"
+          }
+        }
+      ],
+      "deprecated": true,
+      "titleFormatted": {
+        "en": "The vacuum cleaner !{{is|is not}} [[state]]",
+        "de": "Der Staubsauger !{{ist|ist nicht}} [[state]]"
+      }
+    }
+  ]
+}

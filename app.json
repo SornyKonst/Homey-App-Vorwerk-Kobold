@@ -1,0 +1,1568 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "community.kobold.vr300",
+  "version": "0.2.2",
+  "compatibility": ">=12.9.0",
+  "runtime": "nodejs",
+  "platforms": [
+    "local"
+  ],
+  "sdk": 3,
+  "brandColor": "#007A53",
+  "name": {
+    "en": "Vorwerk Kobold VR200/VR300",
+    "de": "Vorwerk Kobold VR200/VR300"
+  },
+  "description": {
+    "en": "Every room at the right time",
+    "de": "Jeder Raum zur richtigen Zeit"
+  },
+  "category": "appliances",
+  "tags": {
+    "en": [
+      "Kobold",
+      "VR200",
+      "VR300",
+      "Vorwerk",
+      "vacuum",
+      "cleaning"
+    ],
+    "de": [
+      "Kobold",
+      "VR200",
+      "VR300",
+      "Vorwerk",
+      "Staubsauger",
+      "Reinigung"
+    ]
+  },
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "permissions": [],
+  "api": {
+    "refreshDeviceRobotData": {
+      "method": "POST",
+      "path": "/robot-data"
+    },
+    "getAreaDevices": {
+      "method": "GET",
+      "path": "/devices"
+    },
+    "refreshDeviceAreas": {
+      "method": "POST",
+      "path": "/areas"
+    },
+    "selectDeviceArea": {
+      "method": "PUT",
+      "path": "/selection"
+    },
+    "startDeviceArea": {
+      "method": "POST",
+      "path": "/start"
+    },
+    "refreshDeviceHistory": {
+      "method": "POST",
+      "path": "/history"
+    },
+    "getDeviceHistoryImage": {
+      "method": "GET",
+      "path": "/image"
+    }
+  },
+  "author": {
+    "name": "Lindner IT Solutions"
+  },
+  "source": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold",
+  "homepage": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold",
+  "bugs": {
+    "url": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold/issues"
+  },
+  "support": "https://github.com/SornyKonst/Homey-App-Vorwerk-Kobold/issues",
+  "flow": {
+    "actions": [
+      {
+        "title": {
+          "en": "Clean an area",
+          "de": "Bereich reinigen"
+        },
+        "titleFormatted": {
+          "en": "Clean [[area]]",
+          "de": "Reinige [[area]]"
+        },
+        "hint": {
+          "en": "Starts a new cleaning job from the charging station in a saved MyKobold area. Stop any running or paused job first.",
+          "de": "Startet eine neue Reinigung von der Ladestation aus in einem gespeicherten MyKobold-Bereich. Stoppe zuerst einen laufenden oder pausierten Auftrag."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_area"
+          },
+          {
+            "name": "area",
+            "type": "autocomplete",
+            "title": {
+              "en": "Area",
+              "de": "Bereich"
+            },
+            "placeholder": {
+              "en": "Choose an area",
+              "de": "Bereich auswählen"
+            }
+          }
+        ],
+        "id": "clean_area"
+      },
+      {
+        "title": {
+          "en": "Refresh available areas",
+          "de": "Verfügbare Bereiche aktualisieren"
+        },
+        "hint": {
+          "en": "Reads the areas saved in MyKobold without starting the robot.",
+          "de": "Liest die in MyKobold gespeicherten Bereiche neu ein, ohne eine Reinigung zu starten."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_area"
+          }
+        ],
+        "id": "refresh_areas"
+      },
+      {
+        "id": "start_cleaning",
+        "title": {
+          "en": "Start cleaning",
+          "de": "Reinigung starten"
+        },
+        "hint": {
+          "en": "Starts a cleaning or resumes a paused cleaning job.",
+          "de": "Startet eine Reinigung oder setzt eine pausierte Reinigung fort."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "pause_cleaning",
+        "title": {
+          "en": "Pause cleaning",
+          "de": "Reinigung pausieren"
+        },
+        "hint": {
+          "en": "Pauses the current job so it can be resumed later.",
+          "de": "Pausiert den laufenden Auftrag, damit er später fortgesetzt werden kann."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "resume_cleaning",
+        "title": {
+          "en": "Resume cleaning",
+          "de": "Reinigung fortsetzen"
+        },
+        "hint": {
+          "en": "Resumes a paused job. Does not start a new job.",
+          "de": "Setzt einen pausierten Auftrag fort. Startet keinen neuen Auftrag."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "stop_cleaning",
+        "title": {
+          "en": "Stop cleaning",
+          "de": "Reinigung stoppen"
+        },
+        "hint": {
+          "en": "Stops the current job. Use Pause cleaning if you want to resume it later.",
+          "de": "Stoppt den laufenden Auftrag. Verwende zum späteren Fortsetzen stattdessen Reinigung pausieren."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "return_to_base",
+        "title": {
+          "en": "Return to charging station",
+          "de": "Zur Ladestation zurückkehren"
+        },
+        "hint": {
+          "en": "Pauses an active cleaning first if the robot requires it, then requests a return to the station.",
+          "de": "Pausiert bei Bedarf zuerst die laufende Reinigung und fordert dann die Rückkehr zur Station an."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "refresh_status",
+        "title": {
+          "en": "Refresh robot status",
+          "de": "Roboterstatus aktualisieren"
+        },
+        "hint": {
+          "en": "Reads the current robot status without starting a cleaning.",
+          "de": "Liest den aktuellen Roboterstatus, ohne eine Reinigung zu starten."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "refresh_robot_data",
+        "title": {
+          "en": "Refresh additional robot data",
+          "de": "Zusätzliche Roboterdaten aktualisieren"
+        },
+        "hint": {
+          "en": "Only reads status, device information and the existing robot schedule. Does not start cleaning or change settings.",
+          "de": "Liest nur Status, Geräteinformationen und den bestehenden Roboterzeitplan. Startet keine Reinigung und verändert keine Einstellungen."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "refresh_history",
+        "title": {
+          "en": "Refresh cleaning history and maps",
+          "de": "Reinigungsverlauf und Karten aktualisieren"
+        },
+        "hint": {
+          "en": "Only reads the cloud account. Does not start or change a cleaning.",
+          "de": "Liest nur das Cloud-Konto. Startet oder verändert keine Reinigung."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_last_cleaned_area"
+          }
+        ]
+      },
+      {
+        "id": "clean",
+        "highlight": true,
+        "title": {
+          "en": "Start cleaning",
+          "de": "Mit Staubsaugen anfangen"
+        },
+        "deprecated": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "spot_clean",
+        "title": {
+          "en": "Start spot cleaning",
+          "de": "Mit Spot-Reinigung anfangen"
+        },
+        "deprecated": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "dock",
+        "highlight": true,
+        "title": {
+          "en": "Return to dock",
+          "de": "Zu Ladestation zurückkehren"
+        },
+        "deprecated": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "stop",
+        "highlight": true,
+        "title": {
+          "en": "Stop",
+          "de": "Stop"
+        },
+        "deprecated": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      }
+    ],
+    "triggers": [
+      {
+        "id": "cleaning_started",
+        "title": {
+          "en": "Cleaning started",
+          "de": "Die Reinigung wurde gestartet"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "cleaning_finished",
+        "title": {
+          "en": "Cleaning ended at the station",
+          "de": "Die Reinigung ist an der Station beendet"
+        },
+        "hint": {
+          "en": "Runs when the robot is docked after an observed cleaning, including manual return. This does not confirm that the entire cleaning completed successfully.",
+          "de": "Wird ausgelöst, wenn der Roboter nach einer beobachteten Reinigung an der Station ist, auch bei manueller Rückkehr. Dies bestätigt keine vollständig erfolgreiche Reinigung."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "robot_error",
+        "title": {
+          "en": "The robot reports an error",
+          "de": "Der Roboter meldet einen Fehler"
+        },
+        "tokens": [
+          {
+            "name": "message",
+            "type": "string",
+            "title": {
+              "en": "Error message",
+              "de": "Fehlermeldung"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "state_changed",
+        "title": {
+          "en": "Robot status changed",
+          "de": "Der Roboterstatus hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "string",
+            "title": {
+              "en": "State code",
+              "de": "Zustandscode"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status description",
+              "de": "Statusbeschreibung"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "cleaning_mode_changed",
+        "title": {
+          "en": "A reported mode changed",
+          "de": "Ein gemeldeter Modus hat sich geändert"
+        },
+        "hint": {
+          "en": "Reports a change to the cleaning or navigation setting. These settings may describe the last job while the robot is idle.",
+          "de": "Meldet eine Änderung der Reinigungs- oder Navigationseinstellung. Im Ruhezustand können diese Werte den letzten Auftrag beschreiben."
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Last reported cleaning mode",
+              "de": "Zuletzt gemeldeter Reinigungsmodus"
+            }
+          },
+          {
+            "name": "navigation",
+            "type": "string",
+            "title": {
+              "en": "Last reported navigation mode",
+              "de": "Zuletzt gemeldeter Navigationsmodus"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "robot_schedule_changed",
+        "title": {
+          "en": "The robot schedule activation changed",
+          "de": "Die Aktivierung des Roboterzeitplans hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "enabled",
+            "type": "boolean",
+            "title": {
+              "en": "Enabled",
+              "de": "Aktiviert"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "robot_warning_changed",
+        "title": {
+          "en": "The robot notice changed",
+          "de": "Der Roboterhinweis hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "code",
+            "type": "string",
+            "title": {
+              "en": "Notice code",
+              "de": "Hinweiscode"
+            }
+          },
+          {
+            "name": "message",
+            "type": "string",
+            "title": {
+              "en": "Notice",
+              "de": "Hinweis"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "history_entry_added",
+        "title": {
+          "en": "A history entry was added",
+          "de": "Ein Verlaufseintrag wurde hinzugefügt"
+        },
+        "hint": {
+          "en": "The first cleaning-history import after connecting or restarting does not trigger this card. Elapsed time includes pauses and charging. Area and elapsed-time tokens are empty if unknown.",
+          "de": "Der erste Import des Reinigungsverlaufs nach Anmeldung oder Neustart löst diese Karte nicht aus. Die Gesamtdauer enthält Pausen und Ladeunterbrechungen. Fläche und Dauer sind leer, wenn unbekannt."
+        },
+        "tokens": [
+          {
+            "name": "started_at",
+            "type": "string",
+            "title": {
+              "en": "Start time",
+              "de": "Beginn"
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "History status code",
+              "de": "Statuscode im Verlauf"
+            }
+          },
+          {
+            "name": "area",
+            "type": "string",
+            "title": {
+              "en": "Cleaned area (m²)",
+              "de": "Gereinigte Fläche (m²)"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "string",
+            "title": {
+              "en": "Elapsed time (min)",
+              "de": "Gesamtdauer (min)"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_last_cleaned_area"
+          }
+        ]
+      },
+      {
+        "id": "vacuumcleaner_state_changed",
+        "title": {
+          "en": "The state changed to...",
+          "de": "Der Status hat sich geändert auf..."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "cleaning",
+                "label": {
+                  "en": "Cleaning",
+                  "de": "Staubsaugen"
+                }
+              },
+              {
+                "id": "spot_cleaning",
+                "label": {
+                  "en": "Spot cleaning",
+                  "de": "Spot-Reinigung"
+                }
+              },
+              {
+                "id": "docked",
+                "label": {
+                  "en": "Docked",
+                  "de": "An Ladestation"
+                }
+              },
+              {
+                "id": "charging",
+                "label": {
+                  "en": "Charging",
+                  "de": "Lädt auf"
+                }
+              },
+              {
+                "id": "stopped",
+                "label": {
+                  "en": "Stopped",
+                  "de": "Gestoppt"
+                }
+              }
+            ],
+            "title": {
+              "en": "State",
+              "de": "Zustand"
+            }
+          }
+        ],
+        "deprecated": true,
+        "titleFormatted": {
+          "en": "The state changed to [[state]]",
+          "de": "Der Status hat sich auf [[state]] geändert"
+        }
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_cleaning",
+        "title": {
+          "en": "The robot !{{is|is not}} cleaning",
+          "de": "Der Roboter !{{reinigt|reinigt nicht}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "is_docked",
+        "title": {
+          "en": "The robot !{{is|is not}} at the charging station",
+          "de": "Der Roboter !{{ist|ist nicht}} an der Ladestation"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "is_charging",
+        "title": {
+          "en": "The robot !{{is|is not}} charging",
+          "de": "Der Roboter !{{lädt|lädt nicht}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "is_eco_mode",
+        "title": {
+          "en": "The last reported mode !{{is|is not}} Eco",
+          "de": "Der zuletzt gemeldete Modus !{{ist|ist nicht}} Eco"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "is_robot_schedule_enabled",
+        "title": {
+          "en": "The robot schedule !{{is|is not}} enabled",
+          "de": "Der Roboterzeitplan !{{ist|ist nicht}} aktiviert"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "has_robot_warning",
+        "title": {
+          "en": "The robot !{{has a|has no}} notice",
+          "de": "Der Roboter !{{meldet einen|meldet keinen}} Hinweis"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          }
+        ]
+      },
+      {
+        "id": "navigation_is",
+        "title": {
+          "en": "The last reported navigation mode !{{is|is not}} [[mode]]",
+          "de": "Der zuletzt gemeldete Navigationsmodus !{{ist|ist nicht}} [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_navigation_mode"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "title": {
+              "en": "Mode",
+              "de": "Modus"
+            },
+            "values": [
+              {
+                "id": "normal",
+                "label": {
+                  "en": "Normal",
+                  "de": "Normal"
+                }
+              },
+              {
+                "id": "extra_care",
+                "label": {
+                  "en": "Extra care",
+                  "de": "Besonders vorsichtig"
+                }
+              },
+              {
+                "id": "deep",
+                "label": {
+                  "en": "Deep",
+                  "de": "Gründlich"
+                }
+              }
+            ]
+          }
+        ],
+        "titleFormatted": {
+          "en": "The last reported navigation mode !{{is|is not}} [[mode]]",
+          "de": "Der zuletzt gemeldete Navigationsmodus !{{ist|ist nicht}} [[mode]]"
+        }
+      },
+      {
+        "id": "charge_count_above",
+        "title": {
+          "en": "The charge counter !{{is|is not}} above [[count]]",
+          "de": "Der Ladezähler !{{liegt|liegt nicht}} über [[count]]"
+        },
+        "hint": {
+          "en": "The counter reported by the robot is not a verified number of full charge cycles.",
+          "de": "Der vom Roboter gemeldete Zähler ist keine bestätigte Anzahl vollständiger Ladezyklen."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_charge_count"
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "title": {
+              "en": "Counter value",
+              "de": "Zählerstand"
+            },
+            "min": 0,
+            "max": 1000000000,
+            "step": 1
+          }
+        ],
+        "titleFormatted": {
+          "en": "The charge counter !{{is|is not}} above [[count]]",
+          "de": "Der Ladezähler !{{liegt|liegt nicht}} über [[count]]"
+        }
+      },
+      {
+        "id": "last_cleaned_area_above",
+        "title": {
+          "en": "The latest cleaned area !{{is|is not}} above [[area]] m²",
+          "de": "Die zuletzt gereinigte Fläche !{{liegt|liegt nicht}} über [[area]] m²"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_last_cleaned_area"
+          },
+          {
+            "name": "area",
+            "type": "number",
+            "title": {
+              "en": "Area",
+              "de": "Fläche"
+            },
+            "min": 0,
+            "max": 10000000,
+            "step": 0.1
+          }
+        ],
+        "titleFormatted": {
+          "en": "The latest cleaned area !{{is|is not}} above [[area]] m²",
+          "de": "Die zuletzt gereinigte Fläche !{{liegt|liegt nicht}} über [[area]] m²"
+        }
+      },
+      {
+        "id": "last_duration_above",
+        "title": {
+          "en": "The last run !{{lasted|did not last}} more than [[minutes]] minutes",
+          "de": "Der letzte Lauf !{{dauerte|dauerte nicht}} länger als [[minutes]] Minuten"
+        },
+        "hint": {
+          "en": "Elapsed time from start to end, including pauses and charging.",
+          "de": "Zeit von Beginn bis Ende, einschließlich Pausen und Ladeunterbrechungen."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_last_duration"
+          },
+          {
+            "name": "minutes",
+            "type": "number",
+            "title": {
+              "en": "Minutes",
+              "de": "Minuten"
+            },
+            "min": 0,
+            "max": 1000000,
+            "step": 0.1
+          }
+        ],
+        "titleFormatted": {
+          "en": "The last run !{{lasted|did not last}} more than [[minutes]] minutes",
+          "de": "Der letzte Lauf !{{dauerte|dauerte nicht}} länger als [[minutes]] Minuten"
+        }
+      },
+      {
+        "id": "last_cleaning_successful",
+        "title": {
+          "en": "The latest cleaning !{{was|was not}} reported as successful",
+          "de": "Die letzte Reinigung !{{wurde|wurde nicht}} als erfolgreich gemeldet"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300&capabilities=kobold_last_cleaning"
+          }
+        ]
+      },
+      {
+        "id": "vacuumcleaner_state_is",
+        "title": {
+          "en": "The vacuum cleaner !{{is|is not}}",
+          "de": "Der Staubsauger !{{ist|ist nicht}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vr300"
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "cleaning",
+                "label": {
+                  "en": "Cleaning",
+                  "de": "Staubsaugen"
+                }
+              },
+              {
+                "id": "spot_cleaning",
+                "label": {
+                  "en": "Spot cleaning",
+                  "de": "Spot-Reinigung"
+                }
+              },
+              {
+                "id": "docked",
+                "label": {
+                  "en": "Docked",
+                  "de": "An Ladestation"
+                }
+              },
+              {
+                "id": "charging",
+                "label": {
+                  "en": "Charging",
+                  "de": "Lädt auf"
+                }
+              },
+              {
+                "id": "stopped",
+                "label": {
+                  "en": "Stopped",
+                  "de": "Gestoppt"
+                }
+              }
+            ],
+            "title": {
+              "en": "State",
+              "de": "Zustand"
+            }
+          }
+        ],
+        "deprecated": true,
+        "titleFormatted": {
+          "en": "The vacuum cleaner !{{is|is not}} [[state]]",
+          "de": "Der Staubsauger !{{ist|ist nicht}} [[state]]"
+        }
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Vorwerk Kobold VR200/VR300",
+        "de": "Vorwerk Kobold VR200/VR300"
+      },
+      "class": "vacuumcleaner",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "energy": {
+        "batteries": [
+          "INTERNAL"
+        ]
+      },
+      "capabilities": [
+        "kobold_start",
+        "kobold_pause",
+        "kobold_resume",
+        "kobold_stop",
+        "kobold_dock",
+        "kobold_start_area",
+        "kobold_area",
+        "vacuumcleaner_state",
+        "measure_battery",
+        "kobold_status",
+        "kobold_charging",
+        "alarm_generic",
+        "kobold_cleaning_mode",
+        "kobold_navigation_mode",
+        "kobold_schedule_enabled",
+        "kobold_firmware",
+        "kobold_model",
+        "kobold_charge_count",
+        "kobold_warning",
+        "kobold_current_area",
+        "kobold_last_cleaned_area",
+        "kobold_last_duration",
+        "kobold_last_cleaning"
+      ],
+      "capabilitiesOptions": {
+        "kobold_area": {
+          "preventInsights": true,
+          "preventTag": true
+        },
+        "vacuumcleaner_state": {
+          "title": {
+            "en": "Legacy status",
+            "de": "Bisheriger Status"
+          },
+          "values": [
+            {
+              "id": "cleaning",
+              "title": {
+                "en": "Cleaning",
+                "de": "Reinigt"
+              }
+            },
+            {
+              "id": "docked",
+              "title": {
+                "en": "Docked",
+                "de": "An der Ladestation"
+              }
+            },
+            {
+              "id": "charging",
+              "title": {
+                "en": "Charging",
+                "de": "Lädt"
+              }
+            },
+            {
+              "id": "stopped",
+              "title": {
+                "en": "Stopped",
+                "de": "Gestoppt"
+              }
+            }
+          ]
+        },
+        "measure_battery": {
+          "title": {
+            "en": "Battery level",
+            "de": "Akkustand"
+          }
+        },
+        "alarm_generic": {
+          "title": {
+            "en": "Robot error",
+            "de": "Roboterfehler"
+          },
+          "titleTrue": {
+            "en": "Error",
+            "de": "Fehler"
+          },
+          "titleFalse": {
+            "en": "No error",
+            "de": "Kein Fehler"
+          }
+        },
+        "kobold_status": {
+          "preventInsights": true
+        },
+        "kobold_charging": {
+          "titleTrue": {
+            "en": "Charging",
+            "de": "Lädt"
+          },
+          "titleFalse": {
+            "en": "Not charging",
+            "de": "Lädt nicht"
+          }
+        },
+        "kobold_cleaning_mode": {
+          "preventInsights": true
+        },
+        "kobold_navigation_mode": {
+          "preventInsights": true
+        },
+        "kobold_schedule_enabled": {
+          "preventInsights": true,
+          "titleTrue": {
+            "en": "Enabled",
+            "de": "Aktiviert"
+          },
+          "titleFalse": {
+            "en": "Disabled",
+            "de": "Deaktiviert"
+          }
+        },
+        "kobold_firmware": {
+          "preventInsights": true
+        },
+        "kobold_model": {
+          "preventInsights": true
+        },
+        "kobold_charge_count": {
+          "preventInsights": true
+        },
+        "kobold_warning": {
+          "preventInsights": true
+        },
+        "kobold_current_area": {
+          "preventInsights": true
+        },
+        "kobold_last_cleaned_area": {
+          "preventInsights": true
+        },
+        "kobold_last_duration": {
+          "preventInsights": true
+        },
+        "kobold_last_cleaning": {
+          "preventInsights": true
+        }
+      },
+      "images": {
+        "small": "/drivers/vr300/assets/images/small.png",
+        "large": "/drivers/vr300/assets/images/large.png",
+        "xlarge": "/drivers/vr300/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "login"
+        }
+      ],
+      "settings": [
+        {
+          "id": "poll_interval",
+          "type": "number",
+          "label": {
+            "en": "Status update interval",
+            "de": "Intervall für Statusabfragen"
+          },
+          "hint": {
+            "en": "Normal interval between cloud status checks. Checks may be delayed after errors. Commands request an additional update.",
+            "de": "Normaler Abstand zwischen Statusabfragen in der Cloud. Nach Fehlern können Abfragen später erfolgen. Befehle lösen eine zusätzliche Aktualisierung aus."
+          },
+          "value": 60,
+          "min": 60,
+          "max": 600,
+          "step": 1,
+          "units": {
+            "en": "seconds",
+            "de": "Sekunden"
+          }
+        }
+      ],
+      "id": "vr300"
+    }
+  ],
+  "capabilities": {
+    "kobold_area": {
+      "type": "enum",
+      "title": {
+        "en": "Area",
+        "de": "Bereich"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "none",
+          "title": {
+            "en": "Choose area",
+            "de": "Bereich auswählen"
+          }
+        }
+      ]
+    },
+    "kobold_charge_count": {
+      "type": "number",
+      "title": {
+        "en": "Charge counter",
+        "de": "Ladezähler"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg",
+      "min": 0,
+      "max": 1000000000,
+      "decimals": 0
+    },
+    "kobold_charging": {
+      "type": "boolean",
+      "title": {
+        "en": "Charging",
+        "de": "Ladevorgang"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/charging.svg"
+    },
+    "kobold_cleaning_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Last reported cleaning mode",
+        "de": "Zuletzt gemeldeter Reinigungsmodus"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg",
+      "values": [
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco",
+            "de": "Eco"
+          }
+        },
+        {
+          "id": "turbo",
+          "title": {
+            "en": "Turbo",
+            "de": "Turbo"
+          }
+        }
+      ]
+    },
+    "kobold_current_area": {
+      "type": "string",
+      "title": {
+        "en": "Current job area",
+        "de": "Bereich des Auftrags"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_dock": {
+      "type": "boolean",
+      "title": {
+        "en": "Return to station",
+        "de": "Zur Station"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/dock.svg"
+    },
+    "kobold_firmware": {
+      "type": "string",
+      "title": {
+        "en": "Firmware version",
+        "de": "Firmwareversion"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_last_cleaned_area": {
+      "type": "number",
+      "title": {
+        "en": "Latest cleaned area",
+        "de": "Zuletzt gereinigte Fläche"
+      },
+      "units": {
+        "en": "m²",
+        "de": "m²"
+      },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_last_cleaning": {
+      "type": "string",
+      "title": {
+        "en": "Last cleaning start",
+        "de": "Letzter Reinigungsbeginn"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_last_duration": {
+      "type": "number",
+      "title": {
+        "en": "Last run: elapsed time",
+        "de": "Letzter Lauf: Gesamtdauer"
+      },
+      "units": {
+        "en": "min",
+        "de": "min"
+      },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_model": {
+      "type": "string",
+      "title": {
+        "en": "Technical model",
+        "de": "Technisches Modell"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_navigation_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Last reported navigation mode",
+        "de": "Zuletzt gemeldeter Navigationsmodus"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg",
+      "values": [
+        {
+          "id": "normal",
+          "title": {
+            "en": "Normal",
+            "de": "Normal"
+          }
+        },
+        {
+          "id": "extra_care",
+          "title": {
+            "en": "Extra care",
+            "de": "Besonders vorsichtig"
+          }
+        },
+        {
+          "id": "deep",
+          "title": {
+            "en": "Deep",
+            "de": "Gründlich"
+          }
+        }
+      ]
+    },
+    "kobold_pause": {
+      "type": "boolean",
+      "title": {
+        "en": "Pause",
+        "de": "Pausieren"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/pause.svg"
+    },
+    "kobold_resume": {
+      "type": "boolean",
+      "title": {
+        "en": "Resume",
+        "de": "Fortsetzen"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/resume.svg"
+    },
+    "kobold_schedule_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "Robot schedule",
+        "de": "Roboterzeitplan"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_start": {
+      "type": "boolean",
+      "title": {
+        "en": "Start",
+        "de": "Starten"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/start.svg"
+    },
+    "kobold_start_area": {
+      "type": "boolean",
+      "title": {
+        "en": "Start area cleaning",
+        "de": "Bereich starten"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/area.svg"
+    },
+    "kobold_status": {
+      "type": "string",
+      "title": {
+        "en": "Robot status",
+        "de": "Roboterstatus"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "kobold_stop": {
+      "type": "boolean",
+      "title": {
+        "en": "Stop",
+        "de": "Stoppen"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "/assets/controls/stop.svg"
+    },
+    "kobold_warning": {
+      "type": "string",
+      "title": {
+        "en": "Robot notice",
+        "de": "Roboterhinweis"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/status.svg"
+    },
+    "vacuumcleaner_state": {
+      "type": "enum",
+      "title": {
+        "en": "Legacy status",
+        "de": "Bisheriger Status",
+        "fr": "Etat de l'aspirateur",
+        "it": "Stato dell'aspirapolvere",
+        "sv": "Dammsugarstatus",
+        "no": "Støvsugerstatus",
+        "es": "Modo de la aspiradora",
+        "da": "Støvsugerstatus",
+        "ru": "Состояние пылесоса",
+        "pl": "Stan odkurzacza",
+        "ko": "청소기 상태",
+        "ar": "حالة المكنسة الكهربائية",
+        "nl": "Stofzuigerstatus"
+      },
+      "values": [
+        {
+          "id": "cleaning",
+          "title": {
+            "en": "Cleaning",
+            "nl": "Stofzuigen",
+            "de": "Staubsaugen",
+            "fr": "Aspirer",
+            "it": "Pulizia in corso",
+            "sv": "Städning",
+            "no": "Rengjøring",
+            "es": "Aspirando",
+            "da": "Støvsuger",
+            "ru": "Идет уборка",
+            "pl": "Sprzątanie",
+            "ko": "청소 중",
+            "ar": "تنظيف"
+          }
+        },
+        {
+          "id": "spot_cleaning",
+          "title": {
+            "en": "Spot cleaning",
+            "nl": "Vlek schoonmaken",
+            "de": "Spot-Reinigung",
+            "fr": "Détacher",
+            "it": "Pulizia delle macchie",
+            "sv": "Områdesstädning",
+            "no": "Områderengjøring",
+            "es": "Aspirando un punto concreto",
+            "da": "Områdestøvsugning",
+            "ru": "Идет точечная уборка",
+            "pl": "Przestań sprzątać",
+            "ko": "집중 청소 중",
+            "ar": "تنظيف موضعي"
+          }
+        },
+        {
+          "id": "docked",
+          "title": {
+            "en": "Docked",
+            "nl": "Op laadstation",
+            "de": "An Ladestation",
+            "fr": "Connecté à la base",
+            "it": "Connesso alla base",
+            "sv": "Dockad",
+            "no": "I ladestasjon",
+            "es": "En la base de carga",
+            "da": "I ladestation",
+            "ru": "На станции",
+            "pl": "W bazie",
+            "ko": "거치됨",
+            "ar": "قيد الإرساء"
+          }
+        },
+        {
+          "id": "charging",
+          "title": {
+            "en": "Charging",
+            "nl": "Aan het opladen",
+            "de": "Lädt auf",
+            "fr": "En charge",
+            "it": "In carica",
+            "sv": "Laddar",
+            "no": "Lader",
+            "es": "Cargando",
+            "da": "Lader",
+            "ru": "Заряжается",
+            "pl": "Ładowanie",
+            "ko": "충전 중",
+            "ar": "قيد الشحن"
+          }
+        },
+        {
+          "id": "stopped",
+          "title": {
+            "en": "Stopped",
+            "nl": "Gestopt",
+            "de": "Gestoppt",
+            "fr": "Arrêté",
+            "it": "Fermo",
+            "sv": "Stoppad",
+            "no": "Stanset",
+            "es": "Detenida",
+            "da": "Stoppet",
+            "ru": "Остановлен",
+            "pl": "Zatrzymano",
+            "ko": "정지",
+            "ar": "متوقف"
+          }
+        }
+      ],
+      "color": "#0091FF",
+      "getable": true,
+      "setable": true,
+      "uiComponent": null
+    }
+  }
+}

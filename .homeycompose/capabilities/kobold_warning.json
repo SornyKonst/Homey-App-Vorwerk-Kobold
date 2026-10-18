@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Robot notice",
+    "de": "Roboterhinweis"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}

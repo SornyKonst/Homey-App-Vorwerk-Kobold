@@ -1,0 +1,17 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Last run: elapsed time",
+    "de": "Letzter Lauf: Gesamtdauer"
+  },
+  "units": {
+    "en": "min",
+    "de": "min"
+  },
+  "decimals": 1,
+  "min": 0,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}

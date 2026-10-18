@@ -1,0 +1,3 @@
+Fit your Kobold VR200 or VR300's cleaning into your daily routine. Check its status and battery and coordinate cleaning with Homey Flows. With a VR300, choose saved areas and view cleaning results with maps. Available functions match the detected model. VR200 compatibility has not yet been confirmed on real hardware.
+
+Sign in with your MyKobold email and a one-time email code. Requires a connected robot, internet access and Homey 12.9.0 or newer. Connection credentials are stored privately on Homey. This independent community app uses an unofficial cloud interface and is not affiliated with Vorwerk. Manage maps and schedules in MyKobold.

@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Technical model",
+    "de": "Technisches Modell"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}

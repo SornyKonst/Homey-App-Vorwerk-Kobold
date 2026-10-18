@@ -1,0 +1,133 @@
+name: Update app version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version increment to commit (no tag, release, or upload)
+        type: choice
+        required: true
+        default: patch
+        options: [patch, minor, major]
+      changelog_en:
+        description: English release notes for this version
+        type: string
+        required: true
+      changelog_de:
+        description: German release notes (optional)
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homey-version
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Commit the selected version increment
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      HOMEY_HEADLESS: '1'
+      HOMEY_SKIP_STARTUP_NOTIFIERS: '1'
+      HOMEY_HOME: /tmp/homey-empty-profile
+      VERSION_STEP: ${{ inputs.version }}
+      CHANGELOG_EN: ${{ inputs.changelog_en }}
+      CHANGELOG_DE: ${{ inputs.changelog_de }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate the explicit inputs
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          assert.ok(['patch', 'minor', 'major'].includes(process.env.VERSION_STEP));
+          assert.ok(process.env.CHANGELOG_EN.trim().length >= 4 && process.env.CHANGELOG_EN.length <= 10000, 'English release notes must contain 4–10000 characters.');
+          assert.ok((process.env.CHANGELOG_DE || '').length <= 10000, 'German release notes are too long.');
+          NODE
+      - name: Install the pinned official Homey CLI outside the app
+        run: npm install --prefix "$RUNNER_TEMP/homey-cli" --no-audit --no-fund --package-lock=false homey@4.6.0
+      - name: Apply only the chosen version increment and release notes
+        id: version
+        run: |
+          homey_cli="$RUNNER_TEMP/homey-cli/node_modules/homey/bin/homey.mjs"
+          if [ -n "$CHANGELOG_DE" ]; then
+            node "$homey_cli" app version "$VERSION_STEP" --changelog.en "$CHANGELOG_EN" --changelog.de "$CHANGELOG_DE"
+          else
+            node "$homey_cli" app version "$VERSION_STEP" --changelog.en "$CHANGELOG_EN"
+          fi
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const manifest = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+          const version = manifest.version;
+          assert.match(version, /^\d+\.\d+\.\d+$/);
+          const filename = 'package.json';
+          const pkg = JSON.parse(fs.readFileSync(filename, 'utf8'));
+          pkg.version = version;
+          fs.writeFileSync(filename, `${JSON.stringify(pkg, null, 2)}\n`);
+          if (fs.existsSync('package-lock.json')) {
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            lock.version = version;
+            if (lock.packages?.['']) lock.packages[''].version = version;
+            fs.writeFileSync('package-lock.json', `${JSON.stringify(lock, null, 2)}\n`);
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+          NODE
+      - name: Run offline tests and publish validation for the new version
+        run: |
+          npm test
+          node scripts/store-preflight.cjs
+          node "$RUNNER_TEMP/homey-cli/node_modules/homey/bin/homey.mjs" app validate --level publish
+          node scripts/store-preflight.cjs
+      - name: Check and stage only the version files
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+          const allowed = ['app.json', '.homeycompose/app.json', 'package.json', 'package-lock.json', '.homeychangelog.json'];
+          const changed = execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], { encoding: 'utf8' }).split('\n').filter(Boolean);
+          assert.ok(changed.length > 0, 'No version change was produced.');
+          for (const row of changed) assert.ok(allowed.includes(row.slice(3)), `Unexpected change: ${row.slice(3)}`);
+          const readBefore = name => JSON.parse(execFileSync('git', ['show', `HEAD:${name}`], { encoding: 'utf8' }));
+          for (const name of allowed.filter(name => name !== '.homeychangelog.json' && fs.existsSync(name))) {
+            const after = JSON.parse(fs.readFileSync(name, 'utf8'));
+            const before = readBefore(name);
+            before.version = after.version;
+            if (name === 'package-lock.json' && before.packages?.['']) before.packages[''].version = after.packages[''].version;
+            assert.deepEqual(after, before, `Only version fields may change in ${name}`);
+            assert.equal(after.version, process.env.NEW_VERSION);
+          }
+          const notes = JSON.parse(fs.readFileSync('.homeychangelog.json', 'utf8'));
+          let previous = {};
+          try { previous = readBefore('.homeychangelog.json'); } catch {}
+          const withoutCurrent = { ...notes }; delete withoutCurrent[process.env.NEW_VERSION];
+          assert.deepEqual(withoutCurrent, previous, 'Earlier release notes must remain unchanged.');
+          assert.equal(notes[process.env.NEW_VERSION].en, process.env.CHANGELOG_EN);
+          execFileSync('git', ['add', '--', ...allowed.filter(name => fs.existsSync(name))]);
+          NODE
+      - name: Commit and push the version increment without tags or releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Bump app version to $NEW_VERSION"
+          gh auth setup-git
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"

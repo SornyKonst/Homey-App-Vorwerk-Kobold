@@ -1,0 +1,14 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Charge counter",
+    "de": "Ladezähler"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg",
+  "min": 0,
+  "max": 1000000000,
+  "decimals": 0
+}

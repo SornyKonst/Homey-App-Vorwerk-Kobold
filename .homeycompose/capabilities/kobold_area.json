@@ -1,0 +1,20 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Area",
+    "de": "Bereich"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "uiQuickAction": false,
+  "values": [
+    {
+      "id": "none",
+      "title": {
+        "en": "Choose area",
+        "de": "Bereich auswählen"
+      }
+    }
+  ]
+}

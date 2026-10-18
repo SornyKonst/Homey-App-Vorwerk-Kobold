@@ -1,0 +1,12 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Start area cleaning",
+    "de": "Bereich starten"
+  },
+  "getable": false,
+  "setable": true,
+  "uiComponent": "button",
+  "uiQuickAction": false,
+  "icon": "/assets/controls/area.svg"
+}

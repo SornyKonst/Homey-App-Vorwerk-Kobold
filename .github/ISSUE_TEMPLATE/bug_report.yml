@@ -1,0 +1,44 @@
+name: Report a problem / Problem melden
+description: Report an app problem without sharing private connection data.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a public issue. Do not include email codes, tokens, robot secrets, serial numbers, Homey backups, or identifying floor plans.
+        Dieses Issue ist öffentlich. Bitte keine E-Mail-Codes, Token, Gerätegeheimnisse, Seriennummern, Homey-Backups oder identifizierenden Grundrisse veröffentlichen.
+  - type: input
+    id: app_version
+    attributes:
+      label: App version / App-Version
+      placeholder: 0.2.2
+    validations:
+      required: true
+  - type: input
+    id: homey_version
+    attributes:
+      label: Homey version and type / Homey-Version und -Typ
+      placeholder: Homey Self-Hosted 13.5.1 / Homey Pro
+    validations:
+      required: true
+  - type: dropdown
+    id: robot_model
+    attributes:
+      label: Robot / Roboter
+      options:
+        - VR200
+        - VR300
+        - Unknown / Unbekannt
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened? / Was ist passiert?
+      description: Describe the steps, expected result and actual result. State whether MyKobold works. / Beschreibe die Schritte, das erwartete und das tatsächliche Ergebnis. Funktioniert MyKobold?
+    validations:
+      required: true
+  - type: textarea
+    id: message
+    attributes:
+      label: Error message / Fehlermeldung
+      description: Optional. Remove private information before sharing. / Optional. Private Informationen vor dem Teilen entfernen.

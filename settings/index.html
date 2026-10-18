@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    :root { color-scheme: light dark; --surface: #fff; --soft: #f4f7f5; --ink: #26332c; --muted: #55665c; --border: #c6d0ca; --green: #006c49; --success: #175c3f; --success-bg: #edf7f0; --warning: #704600; --warning-bg: #fff4d8; --error: #a4262c; --error-bg: #fff0ef; }
+    body { margin: 0; color: var(--ink); background: var(--surface); }
+    #kobold-settings { box-sizing: border-box; max-width: 760px; padding: 24px 20px 40px; margin: 0 auto; overflow-wrap: anywhere; font-size: 14px; line-height: 1.5; }
+    #kobold-settings *, #kobold-settings *::before, #kobold-settings *::after { box-sizing: border-box; }
+    #kobold-settings h1 { font-size: 25px; line-height: 1.2; margin: 0 0 10px; }
+    #kobold-settings h2 { font-size: 21px; margin: 0 0 10px; }
+    #kobold-settings h4 { font-size: 15px; margin: 24px 0 12px; }
+    #kobold-settings p { line-height: 1.5; }
+    #kobold-settings .intro { color: var(--muted); margin: 0 0 16px; }
+    #kobold-settings .device { margin: 24px 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    #kobold-settings .device-header { padding: 18px 18px 16px; background: var(--soft); }
+    #kobold-settings .status-line { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0; font-size: 14px; }
+    #kobold-settings .section { border-top: 1px solid var(--border); }
+    #kobold-settings .section > summary { padding: 16px 18px; font-size: 17px; }
+    #kobold-settings summary { min-height: 44px; cursor: pointer; font-weight: 600; line-height: 1.4; }
+    #kobold-settings summary::marker { color: var(--muted); }
+    #kobold-settings .section-content { padding: 0 18px 18px; }
+    #kobold-settings .section-content > :first-child { margin-top: 0; }
+    #kobold-settings label { font-size: 14px; color: var(--ink); text-transform: none; letter-spacing: normal; line-height: 1.5; display: block; font-weight: 600; margin: 16px 0 8px; }
+    #kobold-settings select, #kobold-settings button { width: auto; max-width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 8px; color: var(--ink); background: var(--surface); font: inherit; }
+    #kobold-settings select { width: 100%; padding: 10px 12px; }
+    #kobold-settings option { color: var(--ink); background: var(--surface); }
+    #kobold-settings button { padding: 10px 14px; font-weight: 600; cursor: pointer; white-space: normal; line-height: 1.4; }
+    #kobold-settings button.primary { color: #fff; background: var(--green); border-color: var(--green); width: 100%; }
+    #kobold-settings button:disabled, #kobold-settings select:disabled { opacity: .55; cursor: default; }
+    #kobold-settings .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 0; }
+    #kobold-settings .actions > button { flex: 1 1 150px; }
+    #kobold-settings .hint, #kobold-settings .updated { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    #kobold-settings .hint { margin: 10px 0; }
+    #kobold-settings .updated { margin: 12px 0 0; }
+    #kobold-settings .notice { padding: 10px 12px; margin: 12px 0 0; border-radius: 7px; font-size: 14px; line-height: 1.45; background: var(--soft); }
+    #kobold-settings .notice.success { color: var(--success); background: var(--success-bg); }
+    #kobold-settings .notice.warning { color: var(--warning); background: var(--warning-bg); }
+    #kobold-settings .notice.error { color: var(--error); background: var(--error-bg); }
+    #kobold-settings .data-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 18px; margin: 18px 0; }
+    #kobold-settings .data-list dt { font-size: 13px; color: var(--muted); }
+    #kobold-settings .data-list dd { margin: 0; line-height: 1.4; }
+    #kobold-settings .saved-list { list-style: none; padding: 0; margin: 12px 0; }
+    #kobold-settings .saved-list li { padding: 14px 0; border-top: 1px solid var(--border); }
+    #kobold-settings .saved-list strong { display: block; font-weight: 600; }
+    #kobold-settings .entry-detail { display: block; margin: 6px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+    #kobold-settings .recent { margin-top: 20px; }
+    #kobold-settings .recent > summary { padding: 10px 0; font-size: 15px; }
+    #kobold-settings .map-preview { margin: 16px 0 0; }
+    #kobold-settings .image-frame { aspect-ratio: 3 / 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--soft); }
+    #kobold-settings .image-frame .hint { text-align: center; margin: 0; }
+    #kobold-settings .history-entry > summary { padding: 10px 0; }
+    #kobold-settings .history-entry > summary strong, #kobold-settings .history-entry > summary .entry-detail { display: inline; }
+    #kobold-settings .history-entry > summary .entry-detail { display: block; margin: 4px 0 0 16px; font-weight: 400; }
+    #kobold-settings .map-preview img { display: block; width: 100%; height: auto; max-height: 560px; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
+    #kobold-settings .image-frame img { width: 100%; height: 100%; max-height: none; min-height: 0; object-fit: contain; border: 0; background: #fff; }
+    #kobold-settings .map-preview figcaption { font-size: 13px; margin: 10px 0; color: var(--muted); }
+    #kobold-settings .privacy { font-size: 13px; margin-top: 24px; color: var(--muted); }
+    #kobold-settings .privacy summary { padding: 10px 0; }
+    #kobold-settings [hidden] { display: none !important; }
+    #kobold-settings :focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+    @media (max-width: 400px) { #kobold-settings { padding: 18px 12px 30px; } #kobold-settings .device-header { padding: 16px 14px; } #kobold-settings .section > summary { padding: 15px 14px; } #kobold-settings .section-content { padding: 0 14px 16px; } #kobold-settings .data-list { grid-template-columns: minmax(0, 1fr); gap: 4px; } #kobold-settings .data-list dd { margin-bottom: 9px; } #kobold-settings .actions > button { flex-basis: 100%; } }
+    @media (prefers-color-scheme: dark) { :root { --surface: #202722; --soft: #29332c; --ink: #edf3ef; --muted: #c0cfc5; --border: #66796d; --green: #007f58; --success: #c7efd5; --success-bg: #243e2e; --warning: #ffe2a0; --warning-bg: #493a20; --error: #ffd1ce; --error-bg: #4d2b2c; } }
+  </style>
+</head>
+<body>
+<main class="areas" id="kobold-settings">
+  <h1 id="title"></h1>
+  <p id="intro" class="intro"></p>
+  <button type="button" id="reload"></button>
+  <p id="global-notice" class="notice" role="status" aria-live="polite" tabindex="-1" hidden></p>
+  <div id="devices"></div>
+  <details class="privacy">
+    <summary id="privacy-title"></summary>
+    <p id="privacy-cloud"></p><p id="privacy-storage"></p><p id="privacy-remove"></p>
+  </details>
+</main>
+<script>
+function onHomeyReady(Homey) {
+  'use strict';
+  var devices = [], busy = false, hasLoaded = false;
+  var areaDrafts = Object.create(null), mapDrafts = Object.create(null);
+  var imageStates = Object.create(null), expanded = Object.create(null), notices = Object.create(null);
+  var imageLoadingQueued = false;
+  var pendingStarts = Object.create(null);
+  var text = function (key) { return Homey.__('settings.' + key); };
+  var byId = function (id) { return document.getElementById(id); };
+  var container = byId('devices'), reload = byId('reload');
+  var uid = function () { return Array.from(arguments).map(function (part) { return encodeURIComponent(String(part)); }).join('-'); };
+  byId('title').textContent = text('title');
+  byId('intro').textContent = text('ui_intro');
+  reload.textContent = text('reload');
+  ['privacy-title', 'privacy-cloud', 'privacy-storage', 'privacy-remove'].forEach(function (id) { byId(id).textContent = text(id.replace(/-/g, '_')); });
+
+  function api(method, path, body) {
+    return new Promise(function (resolve, reject) {
+      Homey.api(method, path, body, function (error, result) { if (error) reject(error); else resolve(result); });
+    });
+  }
+  function node(tag, className, value, id) {
+    var result = document.createElement(tag);
+    if (className) result.className = className;
+    if (value !== undefined) result.textContent = value;
+    if (id) result.id = id;
+    return result;
+  }
+  function button(label, id, handler, primary) {
+    var result = node('button', primary ? 'primary' : '', label, id);
+    result.type = 'button'; result.addEventListener('click', handler); return result;
+  }
+  function sameArea(a, b) { return Boolean(a && b && a.id === b.id && a.mapId === b.mapId); }
+  // Older app versions do not provide support metadata. Keep their existing UI.
+  function supports(device, feature) { return !(device && device.support && device.support[feature] === false); }
+  function supportsImages(device, origin) { return supports(device, 'maps') && (origin === 'map' || supports(device, 'history')); }
+  function publicModel(device) { var model = device.support && device.support.model; return model === 'VR200' || model === 'VR300' ? model : ''; }
+  function noticeKey(id, scope) { return uid('notice', id, scope); }
+  function applyNotice(element, value) {
+    element.hidden = !value || !value.message;
+    element.textContent = value ? value.message : '';
+    element.className = 'notice' + (value && value.type ? ' ' + value.type : '');
+    element.setAttribute('role', value && value.type === 'error' ? 'alert' : 'status');
+    element.setAttribute('aria-live', value && value.type === 'error' ? 'assertive' : 'polite');
+  }
+  function noticeNode(id, scope) {
+    var key = noticeKey(id, scope), result = node('p', 'notice', '', key);
+    result.tabIndex = -1; applyNotice(result, notices[key]); return result;
+  }
+  function updateNotice(id, scope, value) {
+    var key = noticeKey(id, scope); notices[key] = value;
+    var element = id === 'global' ? byId('global-notice') : byId(key);
+    if (element) applyNotice(element, value);
+  }
+  function stateHint(parent, deviceId, scope, key) {
+    var message = text(key), notice = notices[noticeKey(deviceId, scope)];
+    if (!notice || notice.message !== message) parent.appendChild(node('p', 'hint', message));
+  }
+  function setBusy(value) {
+    busy = value; reload.disabled = value;
+    if (value) container.querySelectorAll('button, select').forEach(function (element) { element.disabled = true; });
+  }
+  function currentDevice(id) { return devices.find(function (device) { return device.id === id; }); }
+  function updateDevice(device) {
+    var index = devices.findIndex(function (item) { return item.id === device.id; });
+    if (index >= 0 && (historyVersion(devices[index]) !== historyVersion(device))) invalidateImages(device.id);
+    if (device.cleaningHistory && device.cleaningHistory.needsLogin) invalidateImages(device.id);
+    delete pendingStarts[device.id];
+    if (index >= 0) devices[index] = device; else devices.push(device);
+  }
+  async function runTask(options) {
+    if (busy) return;
+    var focus = options.focusId || (document.activeElement && document.activeElement.id);
+    var id = options.deviceId || 'global', scope = options.scope || 'load';
+    updateNotice(id, scope, { type: '', message: options.working }); setBusy(true);
+    var failed = false;
+    try {
+      var result = await options.task();
+      var outcome = typeof options.success === 'function' ? options.success(result) : { type: 'success', message: options.success || '' };
+      updateNotice(id, scope, outcome);
+    } catch (error) {
+      failed = true;
+      updateNotice(id, scope, { type: 'error', message: error && typeof error.message === 'string' ? error.message : typeof error === 'string' ? error : text('failed') });
+    } finally {
+      setBusy(false);
+      render(failed ? id === 'global' ? 'global-notice' : noticeKey(id, scope) : options.focusAfter || focus, !failed && options.revealAfter);
+    }
+  }
+  function timestamp(parent, key, value) {
+    if (typeof value !== 'string') return;
+    var date = new Date(value);
+    if (Number.isFinite(date.getTime())) parent.appendChild(node('p', 'updated', text(key) + ' ' + date.toLocaleString()));
+  }
+  function disclosure(device, key, title, defaultOpen, className) {
+    var stateKey = uid(device.id, key), result = node('details', className || 'section', undefined, uid('section', device.id, key));
+    result.open = Object.prototype.hasOwnProperty.call(expanded, stateKey) ? expanded[stateKey] : defaultOpen;
+    result.appendChild(node('summary', '', title, uid('summary', device.id, key)));
+    result.addEventListener('toggle', function () { if (byId(result.id) !== result) return; expanded[stateKey] = result.open; queueAutomaticImages(); });
+    return result;
+  }
+  function statusHeader(device) {
+    var header = node('header', 'device-header'); header.appendChild(node('h2', '', device.name || text('robot')));
+    var model = publicModel(device);
+    if (model) header.appendChild(node('p', 'hint', text('support_model') + ' ' + model));
+    if (model === 'VR200' && !supports(device, 'areas') && !supports(device, 'history') && !supports(device, 'maps')) header.appendChild(node('p', 'hint', text('support_vr200_hint')));
+    var status = device.robotStatus;
+    if (!status || typeof status !== 'object') return header;
+    var line = node('p', 'status-line');
+    line.appendChild(node('span', '', status.available === false ? text('ui_offline') : typeof status.status === 'string' && status.status ? status.status : text('data_unknown')));
+    line.appendChild(node('span', '', text('ui_battery') + ' ' + (typeof status.battery === 'number' && Number.isFinite(status.battery) ? status.battery.toLocaleString() + ' %' : text('data_unknown'))));
+    header.appendChild(line);
+    if (status.available === false) header.appendChild(node('p', 'hint', text(supports(device, 'areas') ? 'ui_offline_hint' : 'support_offline_hint')));
+    timestamp(header, 'ui_status_updated', status.updatedAt);
+    return header;
+  }
+  function areaStartBlock(device) {
+    if (device.robotStatus && device.robotStatus.available === false) return text('ui_start_offline');
+    if (device.robotStatus && device.robotStatus.docked === false) return text('ui_start_station');
+    if (!device.robotStatus || device.robotStatus.docked !== true) return text('ui_start_unknown');
+    if (pendingStarts[device.id]) return text('ui_start_pending');
+    return '';
+  }
+  function renderAreas(device) {
+    var section = disclosure(device, 'areas', text('ui_area_title'), true);
+    var content = node('div', 'section-content'), areas = Array.isArray(device.areas) ? device.areas : [];
+    content.appendChild(node('p', 'hint', text('ui_area_intro')));
+    var refreshId = uid('area-refresh', device.id);
+    content.appendChild(button(text('refresh'), refreshId, function () {
+      runTask({ deviceId: device.id, scope: 'areas', working: text('reading'), success: text('refreshed'), focusId: refreshId,
+        task: async function () { updateDevice(await api('POST', '/areas', { deviceId: device.id })); } });
+    }));
+    if (!areas.length) content.appendChild(node('p', 'hint', device.areasUpdatedAt ? text('no_areas') : text('read_first')));
+    else {
+      var selectId = uid('area-select', device.id), hintId = uid('area-hint', device.id);
+      var label = node('label', '', text('area')); label.htmlFor = selectId;
+      var select = node('select', '', undefined, selectId); select.setAttribute('aria-describedby', hintId);
+      var empty = node('option', '', text('choose')); empty.value = ''; select.appendChild(empty);
+      areas.forEach(function (area, index) { var option = node('option', '', area.name); option.value = String(index); select.appendChild(option); });
+      var display = Object.prototype.hasOwnProperty.call(areaDrafts, device.id) ? areaDrafts[device.id] : device.selectedArea;
+      var selectedIndex = areas.findIndex(function (area) { return sameArea(area, display); }); select.value = selectedIndex < 0 ? '' : String(selectedIndex);
+      var save = button(text('save'), uid('area-save', device.id), function () {
+        var area = chosen(); if (!area) return;
+        runTask({ deviceId: device.id, scope: 'areas', working: text('saving'), success: text('saved'), focusAfter: selectId,
+          task: async function () { updateDevice(await api('PUT', '/selection', { deviceId: device.id, area: area })); delete areaDrafts[device.id]; } });
+      });
+      var start = button(text('ui_area_start'), uid('area-start', device.id), function () {
+        var area = chosen(); if (!area || !sameArea(area, device.selectedArea) || areaStartBlock(device)) return;
+        runTask({ deviceId: device.id, scope: 'areas', working: text('starting'), success: text('started'), focusAfter: selectId,
+          task: async function () { var acknowledged = await api('POST', '/start', { deviceId: device.id, area: area }); if (acknowledged !== true) throw new Error(Homey.__('errors.command_failed')); pendingStarts[device.id] = true; } });
+      }, true);
+      start.setAttribute('aria-describedby', hintId);
+      var hint = node('p', 'hint', '', hintId);
+      function chosen() { return select.value === '' ? null : areas[Number(select.value)]; }
+      function updateButtons() {
+        var area = chosen(), saved = sameArea(area, device.selectedArea), blocked = areaStartBlock(device);
+        save.disabled = busy || !area || saved;
+        start.disabled = busy || !area || !saved || Boolean(blocked);
+        hint.textContent = !area ? text('ui_area_choose_hint') : !saved ? text('ui_area_unsaved_hint') : blocked || text('ui_area_saved_hint');
+      }
+      select.addEventListener('change', function () { areaDrafts[device.id] = chosen(); updateButtons(); });
+      content.appendChild(label); content.appendChild(select);
+      var actions = node('div', 'actions'); actions.appendChild(save); content.appendChild(actions);
+      content.appendChild(hint); content.appendChild(start); updateButtons();
+    }
+    content.appendChild(noticeNode(device.id, 'areas')); timestamp(content, 'updated', device.areasUpdatedAt);
+    section.appendChild(content); return section;
+  }
+  function historyOutcome(result) {
+    var history = result && result.cleaningHistory;
+    if (history && history.needsLogin === true) return { type: 'warning', message: text('history_login_required') };
+    if (!history || history.available !== true) return { type: 'warning', message: text(history && history.updatedAt ? 'history_cached' : 'history_unavailable') };
+    return { type: 'success', message: text('history_refreshed') };
+  }
+  function imageSource(result) {
+    if (!result || !['image/png', 'image/jpeg'].includes(result.mimeType) || typeof result.data !== 'string' || !result.data.length
+      || result.data.length > 7 * 1024 * 1024 || result.data.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(result.data)) throw new Error(text('history_image_failed'));
+    var padding = result.data.endsWith('==') ? 2 : result.data.endsWith('=') ? 1 : 0;
+    if (result.data.length * 3 / 4 - padding > 5 * 1024 * 1024) throw new Error(text('history_image_failed'));
+    return 'data:' + result.mimeType + ';base64,' + result.data;
+  }
+  function invalidateImages(deviceId) {
+    var previous = imageStates[deviceId]; delete imageStates[deviceId];
+    if (previous) ['map', 'entry'].forEach(function (origin) {
+      var slot = previous[origin], target = slot && byId(slotId(deviceId, origin, slot.id));
+      if (target) {
+        var figure = node('figure', 'map-preview'), frame = node('div', 'image-frame');
+        frame.appendChild(node('p', 'hint', text('history_image_loading'))); figure.appendChild(frame);
+        figure.appendChild(node('figcaption', '', slot.label || '')); target.replaceChildren(figure);
+      }
+    });
+  }
+  function historyVersion(device) { return JSON.stringify([device.cleaningHistory || null, supports(device, 'history'), supports(device, 'maps')]); }
+  function imageState(device) {
+    var version = historyVersion(device), state = imageStates[device.id];
+    if (!state || state.version !== version) {
+      state = { version: version, map: null, entry: null };
+      imageStates[device.id] = state;
+    }
+    return state;
+  }
+  function slotId(deviceId, origin, imageId) { return uid('image-slot', deviceId, origin, imageId); }
+  function entryId(deviceId, imageId) { return uid('entry', deviceId, imageId); }
+  function entryStateKey(deviceId, imageId) { return uid(deviceId, 'entry', imageId); }
+  function drawImageSlot(device, origin, entry, label, target) {
+    var state = imageState(device), slot = state[origin];
+    target.replaceChildren();
+    var figure = node('figure', 'map-preview'), frame = node('div', 'image-frame');
+    var active = slot && slot.id === entry.id ? slot : null;
+    if (active && active.status === 'loaded') {
+      var image = node('img'); image.alt = text('history_image_alt') + ' ' + label; image.src = active.source;
+      image.addEventListener('error', function () {
+        if (imageStates[device.id] !== state || state[origin] !== active || active.status !== 'loaded') return;
+        active.status = 'failed'; active.source = null;
+        updateImageSlot(device.id, origin, entry.id);
+      });
+      frame.appendChild(image);
+    } else {
+      var failed = active && active.status === 'failed';
+      var message = node('p', 'hint', text(failed ? 'auto_map_failed' : 'history_image_loading'));
+      message.setAttribute('role', failed ? 'alert' : 'status'); message.setAttribute('aria-live', 'polite');
+      frame.appendChild(message);
+      if (failed) frame.appendChild(button(text('auto_map_retry'), uid('image-retry', device.id, origin, entry.id), function () {
+        var current = currentDevice(device.id);
+        if (current) requestImage(current, origin, entry, label, true);
+      }));
+    }
+    figure.appendChild(frame); figure.appendChild(node('figcaption', '', label)); target.appendChild(figure);
+  }
+  function imageSlot(device, origin, entry, label) {
+    var result = node('div', 'image-slot', undefined, slotId(device.id, origin, entry.id));
+    drawImageSlot(device, origin, entry, label, result); return result;
+  }
+  function updateImageSlot(deviceId, origin, imageId) {
+    var device = currentDevice(deviceId), history = device && device.cleaningHistory;
+    if (!history || history.needsLogin || !supportsImages(device, origin)) return;
+    var entries = origin === 'map' ? history.maps : history.entries;
+    var entry = Array.isArray(entries) && entries.find(function (candidate) { return candidate.id === imageId && candidate.hasImage === true; });
+    var target = byId(slotId(deviceId, origin, imageId));
+    if (!entry || !target) return;
+    var label = origin === 'map' ? entry.name || text('history_unnamed_map') : cleaningTitle(entry);
+    drawImageSlot(device, origin, entry, label, target);
+  }
+  function requestImage(device, origin, entry, label, retry) {
+    var history = device.cleaningHistory;
+    if (!history || history.needsLogin || entry.hasImage !== true || !supportsImages(device, origin)) return;
+    var state = imageState(device), previous = state[origin];
+    if (!retry && previous && previous.id === entry.id) return;
+    var slot = { id: entry.id, label: label, status: 'loading', source: null };
+    state[origin] = slot;
+    if (previous && previous.id !== entry.id) updateImageSlot(device.id, origin, previous.id);
+    updateImageSlot(device.id, origin, entry.id);
+    api('GET', '/image?deviceId=' + encodeURIComponent(device.id) + '&imageId=' + encodeURIComponent(entry.id), null)
+      .then(function (result) {
+        var current = currentDevice(device.id), currentHistory = current && current.cleaningHistory;
+        var entries = currentHistory && (origin === 'map' ? currentHistory.maps : currentHistory.entries);
+        if (imageStates[device.id] !== state || state[origin] !== slot || !currentHistory || currentHistory.needsLogin || !supportsImages(current, origin)
+          || historyVersion(current) !== state.version || !Array.isArray(entries)
+          || !entries.some(function (candidate) { return candidate.id === entry.id && candidate.hasImage === true; })) return;
+        slot.source = imageSource(result); slot.status = 'loaded'; updateImageSlot(device.id, origin, entry.id);
+      }).catch(function () {
+        if (imageStates[device.id] !== state || state[origin] !== slot || !currentDevice(device.id)) return;
+        slot.source = null; slot.status = 'failed'; updateImageSlot(device.id, origin, entry.id);
+      });
+  }
+  function queueAutomaticImages() {
+    if (imageLoadingQueued) return;
+    imageLoadingQueued = true;
+    Promise.resolve().then(function () { imageLoadingQueued = false; loadAutomaticImages(); });
+  }
+  function loadAutomaticImages() {
+    if (busy) return;
+    devices.forEach(function (device) {
+      var section = byId(uid('section', device.id, 'history')), history = device.cleaningHistory;
+      if (!section || !section.open || !history || history.needsLogin) return;
+      var maps = Array.isArray(history.maps) ? history.maps : [], select = byId(uid('map-select', device.id));
+      var map = select && maps[Number(select.value)];
+      if (map && map.hasImage === true && supportsImages(device, 'map')) requestImage(device, 'map', map, map.name || text('history_unnamed_map'), false);
+      var recent = byId(uid('section', device.id, 'recent'));
+      if (!recent || !recent.open || !supports(device, 'history')) return;
+      var entries = Array.isArray(history.entries) ? history.entries.slice(0, 20) : [];
+      var entry = entries.find(function (candidate) { var element = byId(entryId(device.id, candidate.id)); return element && element.open; });
+      if (entry && entry.hasImage === true && supportsImages(device, 'entry')) requestImage(device, 'entry', entry, cleaningTitle(entry), false);
+    });
+  }
+  function cleaningDate(entry) {
+    var date = typeof entry.startedAt === 'string' ? new Date(entry.startedAt) : null;
+    return date && Number.isFinite(date.getTime()) ? date.toLocaleString() : text('history_date_unknown');
+  }
+  function cleaningTitle(entry) { return text('history_cleaning_map') + ' ' + cleaningDate(entry); }
+  function historyEntry(device, entry, entries) {
+    var stateKey = entryStateKey(device.id, entry.id);
+    var result = node('details', 'history-entry', undefined, entryId(device.id, entry.id));
+    result.open = expanded[stateKey] === true;
+    var summary = node('summary', '', undefined, uid('entry-summary', device.id, entry.id));
+    summary.appendChild(node('strong', '', cleaningDate(entry)));
+    var status = ['complete','completed','done','ok','error','failed','incomplete','stopped','cancelled'].includes(entry.status) ? entry.status : entry.status === 'canceled' ? 'cancelled' : 'unknown';
+    var parts = [text('history_status_' + status)];
+    parts.push(typeof entry.durationMinutes === 'number' && Number.isFinite(entry.durationMinutes) && entry.durationMinutes >= 0 ? entry.durationMinutes.toLocaleString(undefined, { maximumFractionDigits: 1 }) + ' ' + text('history_minutes') : text('history_duration_unknown'));
+    parts.push(typeof entry.areaSquareMetres === 'number' && Number.isFinite(entry.areaSquareMetres) && entry.areaSquareMetres >= 0 ? entry.areaSquareMetres.toLocaleString(undefined, { maximumFractionDigits: 1 }) + ' m²' : text('history_area_unknown'));
+    if (entry.mode === 'eco' || entry.mode === 'turbo') parts.push(text('data_' + entry.mode));
+    summary.appendChild(node('span', 'entry-detail', parts.join(' · '))); result.appendChild(summary);
+    if (supportsImages(device, 'entry')) {
+      if (entry.hasImage === true && !(device.cleaningHistory && device.cleaningHistory.needsLogin)) result.appendChild(imageSlot(device, 'entry', entry, cleaningTitle(entry)));
+      else if (device.cleaningHistory && device.cleaningHistory.needsLogin) result.appendChild(node('p', 'hint', text('history_login_required')));
+      else result.appendChild(node('p', 'hint', text('auto_map_no_image')));
+    }
+    result.addEventListener('toggle', function () {
+      if (byId(result.id) !== result) return;
+      expanded[stateKey] = result.open;
+      if (result.open) entries.forEach(function (other) {
+        if (other.id === entry.id) return;
+        expanded[entryStateKey(device.id, other.id)] = false;
+        var element = byId(entryId(device.id, other.id)); if (element) element.open = false;
+      });
+      queueAutomaticImages();
+    });
+    return result;
+  }
+  function renderHistory(device) {
+    var history = device.cleaningHistory && typeof device.cleaningHistory === 'object' ? device.cleaningHistory : {};
+    var entries = supports(device, 'history') && Array.isArray(history.entries) ? history.entries.slice(0, 20) : [], maps = supports(device, 'maps') && Array.isArray(history.maps) ? history.maps : [];
+    var section = disclosure(device, 'history', text(supports(device, 'history') && supports(device, 'maps') ? 'history_title' : supports(device, 'history') ? 'support_history_title' : 'support_maps_title'), true), content = node('div', 'section-content');
+    var refreshId = uid('history-refresh', device.id);
+    content.appendChild(button(text('history_refresh'), refreshId, function () {
+      runTask({ deviceId: device.id, scope: 'history', working: text('history_reading'), success: historyOutcome, focusId: refreshId,
+        task: async function () { invalidateImages(device.id); var result = await api('POST', '/history', { deviceId: device.id }); updateDevice(result); return result; } });
+    }));
+    content.appendChild(noticeNode(device.id, 'history'));
+    if (history.needsLogin === true) stateHint(content, device.id, 'history', 'history_login_required');
+    else if (history.available === false) stateHint(content, device.id, 'history', history.updatedAt ? 'history_cached' : 'history_unavailable');
+    else if (!history.updatedAt) content.appendChild(node('p', 'hint', text('history_read_first')));
+    if (maps.length) {
+      var selectId = uid('map-select', device.id), label = node('label', '', text('history_map')); label.htmlFor = selectId;
+      var select = node('select', '', undefined, selectId);
+      maps.forEach(function (map, index) { var option = node('option', '', typeof map.name === 'string' && map.name.trim() ? map.name : text('history_unnamed_map')); option.value = String(index); select.appendChild(option); });
+      var selected = maps.findIndex(function (map) { return map.id === mapDrafts[device.id]; });
+      if (selected < 0) selected = maps.findIndex(function (map) { return map.hasImage === true; }); select.value = String(selected < 0 ? 0 : selected);
+      select.addEventListener('change', function () { var map = maps[Number(select.value)]; if (map) mapDrafts[device.id] = map.id; render(selectId); });
+      content.appendChild(label); content.appendChild(select);
+      var chosen = maps[Number(select.value)];
+      if (chosen && chosen.hasImage === true && !history.needsLogin) content.appendChild(imageSlot(device, 'map', chosen, chosen.name || text('history_unnamed_map')));
+      else if (chosen && chosen.hasImage !== true) content.appendChild(node('p', 'hint', text('history_no_map_image')));
+    } else if (supports(device, 'maps') && history.available === true) content.appendChild(node('p', 'hint', text('ui_no_saved_maps')));
+    var recent = disclosure(device, 'recent', text('history_recent') + (entries.length ? ' (' + entries.length + ')' : ''), false, 'recent');
+    if (!entries.length) recent.appendChild(node('p', 'hint', history.updatedAt && history.available === true ? text('history_empty') : text('history_unknown')));
+    else {
+      var list = node('ol', 'saved-list');
+      entries.forEach(function (entry) { var item = node('li'); item.appendChild(historyEntry(device, entry, entries)); list.appendChild(item); });
+      recent.appendChild(list); recent.appendChild(node('p', 'hint', text('history_limit'))); recent.appendChild(node('p', 'hint', text('history_duration_hint')));
+    }
+    if (supports(device, 'history')) content.appendChild(recent);
+    timestamp(content, 'history_updated', history.updatedAt); section.appendChild(content); return section;
+  }
+  function renderSchedule(device) {
+    var schedule = device.robotSchedule && typeof device.robotSchedule === 'object' ? device.robotSchedule : {};
+    var section = node('section'); section.appendChild(node('h4', '', text('data_schedule_title')));
+    if (schedule.available === false) section.appendChild(node('p', 'hint', text(Array.isArray(schedule.events) ? 'data_schedule_cached' : 'data_schedule_unavailable')));
+    if (schedule.enabled === false) section.appendChild(node('p', 'hint', text('data_schedule_disabled_hint')));
+    if (!Array.isArray(schedule.events)) section.appendChild(node('p', 'hint', text('data_schedule_unknown')));
+    else if (!schedule.events.length) section.appendChild(node('p', 'hint', text('data_schedule_empty')));
+    else {
+      var list = node('ul', 'saved-list');
+      schedule.events.forEach(function (event) { if (!event || typeof event !== 'object') return;
+        var day = Number.isInteger(event.day) && event.day >= 0 && event.day <= 6 ? text('data_day_' + event.day) : text('data_unknown');
+        var time = typeof event.time === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(event.time) ? event.time : text('data_unknown');
+        var item = node('li'); item.appendChild(node('strong', '', day + ', ' + time)); var parts = [];
+        if (event.mode === 'eco' || event.mode === 'turbo') parts.push(text('data_' + event.mode)); if (supports(device, 'areas') && typeof event.area === 'string' && event.area.trim()) parts.push(event.area);
+        if (parts.length) item.appendChild(node('span', 'entry-detail', parts.join(' · '))); list.appendChild(item); }); section.appendChild(list);
+    }
+    timestamp(section, 'data_schedule_updated', schedule.updatedAt); return section;
+  }
+  function renderData(device) {
+    var section = disclosure(device, 'data', text('ui_details_title'), !supports(device, 'areas') && !supports(device, 'history') && !supports(device, 'maps')), content = node('div', 'section-content');
+    var refreshId = uid('data-refresh', device.id);
+    content.appendChild(button(text('data_refresh'), refreshId, function () {
+      runTask({ deviceId: device.id, scope: 'data', working: text('data_reading'), focusId: refreshId,
+        success: function (result) { var partial = result && (supports(result, 'generalInfo') && result.infoAvailable === false || result.robotSchedule && result.robotSchedule.available === false); return { type: partial ? 'warning' : 'success', message: text(partial ? 'data_info_unavailable' : 'data_refreshed') }; },
+        task: async function () { var result = await api('POST', '/robot-data', { deviceId: device.id }); updateDevice(result); return result; } });
+    }));
+    content.appendChild(noticeNode(device.id, 'data'));
+    var data = device.robotData && typeof device.robotData === 'object' ? device.robotData : {}, unknown = text('data_unknown');
+    function stringValue(value) { return typeof value === 'string' && value.trim() ? value : unknown; }
+    function modeValue(value, choices) { return choices.includes(value) ? text('data_' + value) : unknown; }
+    function dateValue(value) { if (typeof value !== 'string' || !value) return unknown; var date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? value + 'T12:00:00' : value); return Number.isFinite(date.getTime()) ? date.toLocaleDateString() : unknown; }
+    var fields = [['data_cleaning_mode', modeValue(data.cleaningMode, ['eco','turbo'])]];
+    if (supports(device, 'navigation')) fields.push(['data_navigation_mode', modeValue(data.navigationMode, ['normal','extra_care','deep'])]);
+    fields.push(['data_schedule', typeof data.scheduleEnabled === 'boolean' ? text(data.scheduleEnabled ? 'data_enabled' : 'data_disabled') : unknown]);
+    if (supports(device, 'areas')) fields.push(['data_area', typeof data.area === 'string' && data.area.trim() ? data.area : text('data_no_area')]);
+    fields.push(['data_warning', stringValue(data.warning)], ['data_firmware', stringValue(data.firmware)], ['data_model', stringValue(data.model)]);
+    if (supports(device, 'generalInfo')) fields.push(['data_charge_count', Number.isInteger(data.chargeCount) && data.chargeCount >= 0 ? data.chargeCount.toLocaleString() : unknown],
+      ['data_battery_vendor', stringValue(data.batteryVendor)], ['data_battery_date', dateValue(data.batteryManufacturingDate)], ['data_product_number', stringValue(data.productNumber)]);
+    var list = node('dl', 'data-list'); fields.forEach(function (field) { list.appendChild(node('dt', '', text(field[0]))); list.appendChild(node('dd', '', field[1])); }); content.appendChild(list);
+    if (publicModel(device) !== 'VR200') content.appendChild(node('p', 'hint', text('data_model_hint')));
+    if (!device.robotDataUpdatedAt) content.appendChild(node('p', 'hint', text(supports(device, 'generalInfo') ? 'data_read_first' : 'support_data_read_first')));
+    if (supports(device, 'generalInfo') && device.infoAvailable === false) stateHint(content, device.id, 'data', 'data_info_unavailable');
+    timestamp(content, 'data_status_updated', device.robotDataUpdatedAt); if (supports(device, 'generalInfo')) timestamp(content, 'data_info_updated', device.infoUpdatedAt);
+    content.appendChild(renderSchedule(device)); section.appendChild(content); return section;
+  }
+  function render(focusId, reveal) {
+    var scroll = window.scrollY;
+    container.replaceChildren();
+    if (hasLoaded && !devices.length) container.appendChild(node('p', 'hint', text('no_devices')));
+    byId('intro').textContent = text(devices.some(function (device) { return !supports(device, 'areas') || !supports(device, 'history') || !supports(device, 'maps'); }) ? 'support_intro' : 'ui_intro');
+    devices.forEach(function (device) { var panel = node('article', 'device'); panel.appendChild(statusHeader(device)); if (supports(device, 'areas')) panel.appendChild(renderAreas(device)); if (supports(device, 'history') || supports(device, 'maps')) panel.appendChild(renderHistory(device)); panel.appendChild(renderData(device)); container.appendChild(panel); });
+    if (focusId) { var target = byId(focusId); if (target && !target.disabled && typeof target.focus === 'function') { target.focus({ preventScroll: true }); if (reveal && typeof target.scrollIntoView === 'function') target.scrollIntoView({ block: 'nearest' }); } }
+    if (!reveal && typeof window.scrollTo === 'function' && Number.isFinite(scroll)) window.scrollTo({ top: scroll, behavior: 'auto' });
+    queueAutomaticImages();
+  }
+  async function load() {
+    await runTask({ working: text('loading'), success: '', focusId: 'reload', task: async function () {
+      var result = await api('GET', '/devices', null), next = Array.isArray(result) ? result : [];
+      next.forEach(updateDevice); devices = next;
+      Object.keys(imageStates).forEach(function (id) { if (!currentDevice(id)) invalidateImages(id); }); hasLoaded = true;
+    } });
+  }
+  reload.addEventListener('click', load); Homey.ready(); load();
+}
+</script>
+</body>
+</html>

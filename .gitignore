@@ -1,0 +1,11 @@
+.homeybuild/
+node_modules/
+*.log
+.env
+.env.*
+!.env.example
+.homey/
+env.json
+*.pem
+*.key
+coverage/

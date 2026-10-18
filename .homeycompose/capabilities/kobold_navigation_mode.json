@@ -1,0 +1,34 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Last reported navigation mode",
+    "de": "Zuletzt gemeldeter Navigationsmodus"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg",
+  "values": [
+    {
+      "id": "normal",
+      "title": {
+        "en": "Normal",
+        "de": "Normal"
+      }
+    },
+    {
+      "id": "extra_care",
+      "title": {
+        "en": "Extra care",
+        "de": "Besonders vorsichtig"
+      }
+    },
+    {
+      "id": "deep",
+      "title": {
+        "en": "Deep",
+        "de": "Gründlich"
+      }
+    }
+  ]
+}

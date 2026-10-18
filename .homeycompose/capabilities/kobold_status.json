@@ -1,0 +1,8 @@
+{
+  "type": "string",
+  "title": { "en": "Robot status", "de": "Roboterstatus" },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}

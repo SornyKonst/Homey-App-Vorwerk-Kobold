@@ -1,0 +1,207 @@
+{
+  "name": {
+    "en": "Vorwerk Kobold VR200/VR300",
+    "de": "Vorwerk Kobold VR200/VR300"
+  },
+  "class": "vacuumcleaner",
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "cloud"
+  ],
+  "energy": {
+    "batteries": [
+      "INTERNAL"
+    ]
+  },
+  "capabilities": [
+    "kobold_start",
+    "kobold_pause",
+    "kobold_resume",
+    "kobold_stop",
+    "kobold_dock",
+    "kobold_start_area",
+    "kobold_area",
+    "vacuumcleaner_state",
+    "measure_battery",
+    "kobold_status",
+    "kobold_charging",
+    "alarm_generic",
+    "kobold_cleaning_mode",
+    "kobold_navigation_mode",
+    "kobold_schedule_enabled",
+    "kobold_firmware",
+    "kobold_model",
+    "kobold_charge_count",
+    "kobold_warning",
+    "kobold_current_area",
+    "kobold_last_cleaned_area",
+    "kobold_last_duration",
+    "kobold_last_cleaning"
+  ],
+  "capabilitiesOptions": {
+    "kobold_area": {
+      "preventInsights": true,
+      "preventTag": true
+    },
+    "vacuumcleaner_state": {
+      "title": {
+        "en": "Legacy status",
+        "de": "Bisheriger Status"
+      },
+      "values": [
+        {
+          "id": "cleaning",
+          "title": {
+            "en": "Cleaning",
+            "de": "Reinigt"
+          }
+        },
+        {
+          "id": "docked",
+          "title": {
+            "en": "Docked",
+            "de": "An der Ladestation"
+          }
+        },
+        {
+          "id": "charging",
+          "title": {
+            "en": "Charging",
+            "de": "Lädt"
+          }
+        },
+        {
+          "id": "stopped",
+          "title": {
+            "en": "Stopped",
+            "de": "Gestoppt"
+          }
+        }
+      ]
+    },
+    "measure_battery": {
+      "title": {
+        "en": "Battery level",
+        "de": "Akkustand"
+      }
+    },
+    "alarm_generic": {
+      "title": {
+        "en": "Robot error",
+        "de": "Roboterfehler"
+      },
+      "titleTrue": {
+        "en": "Error",
+        "de": "Fehler"
+      },
+      "titleFalse": {
+        "en": "No error",
+        "de": "Kein Fehler"
+      }
+    },
+    "kobold_status": {
+      "preventInsights": true
+    },
+    "kobold_charging": {
+      "titleTrue": {
+        "en": "Charging",
+        "de": "Lädt"
+      },
+      "titleFalse": {
+        "en": "Not charging",
+        "de": "Lädt nicht"
+      }
+    },
+    "kobold_cleaning_mode": {
+      "preventInsights": true
+    },
+    "kobold_navigation_mode": {
+      "preventInsights": true
+    },
+    "kobold_schedule_enabled": {
+      "preventInsights": true,
+      "titleTrue": {
+        "en": "Enabled",
+        "de": "Aktiviert"
+      },
+      "titleFalse": {
+        "en": "Disabled",
+        "de": "Deaktiviert"
+      }
+    },
+    "kobold_firmware": {
+      "preventInsights": true
+    },
+    "kobold_model": {
+      "preventInsights": true
+    },
+    "kobold_charge_count": {
+      "preventInsights": true
+    },
+    "kobold_warning": {
+      "preventInsights": true
+    },
+    "kobold_current_area": {
+      "preventInsights": true
+    },
+    "kobold_last_cleaned_area": {
+      "preventInsights": true
+    },
+    "kobold_last_duration": {
+      "preventInsights": true
+    },
+    "kobold_last_cleaning": {
+      "preventInsights": true
+    }
+  },
+  "images": {
+    "small": "/drivers/vr300/assets/images/small.png",
+    "large": "/drivers/vr300/assets/images/large.png",
+    "xlarge": "/drivers/vr300/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "login"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "repair": [
+    {
+      "id": "login"
+    }
+  ],
+  "settings": [
+    {
+      "id": "poll_interval",
+      "type": "number",
+      "label": {
+        "en": "Status update interval",
+        "de": "Intervall für Statusabfragen"
+      },
+      "hint": {
+        "en": "Normal interval between cloud status checks. Checks may be delayed after errors. Commands request an additional update.",
+        "de": "Normaler Abstand zwischen Statusabfragen in der Cloud. Nach Fehlern können Abfragen später erfolgen. Befehle lösen eine zusätzliche Aktualisierung aus."
+      },
+      "value": 60,
+      "min": 60,
+      "max": 600,
+      "step": 1,
+      "units": {
+        "en": "seconds",
+        "de": "Sekunden"
+      }
+    }
+  ]
+}

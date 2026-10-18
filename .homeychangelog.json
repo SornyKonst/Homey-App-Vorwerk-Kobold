@@ -1,0 +1,6 @@
+{
+  "0.2.2": {
+    "en": "Adds model-aware support for Kobold VR200 and VR300, native controls, room selection, battery and device information, schedules, cleaning history and map images where supported. Preserves existing devices and Flows, improves startup compatibility and keeps VR300 model detection and room-start checks reliable when status details change.",
+    "de": "Ergänzt modellgerechte Unterstützung für Kobold VR200 und VR300, native Steuerung, Bereichsauswahl, Akku- und Geräteinformationen, Zeitpläne, Reinigungsverlauf und Kartenbilder, soweit unterstützt. Bestehende Geräte und Flows bleiben erhalten. Verbesserungen betreffen den App-Start sowie die VR300-Modellerkennung und Bereichsprüfung bei wechselnden Statusangaben."
+  }
+}

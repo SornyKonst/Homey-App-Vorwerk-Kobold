@@ -1,0 +1,115 @@
+Vorwerk Kobold VR200/VR300 0.2.2
+Entwickler: Lindner IT Solutions
+Stand: 18.10.2026
+
+Bestätigter Prüfstand für 0.2.2:
+- Zwei weitere VR300-Randfälle gefunden, zuerst mit simulierten Antworten reproduziert und behoben: fehlende optionale Modellmetadaten verursachten unnötige Zusatzabfragen; nach einer Änderung der Bereichsunterstützung während des Kartenabrufs fehlte eine erneute Featureprüfung vor dem Befehlsversuch. Der echte Client hatte unzulässige Kartenparameter weiterhin abgewiesen.
+- 214 App-Tests bestanden, darunter 117 Integrationstests. Zusätzlich 16 Settings- und 14 Anmelde-/Reparaturprüfungen sowie 84 vollständige Request-/Header-/HMAC-Vergleiche mit dem Client aus Version 0.1.9 bestanden. Bewegung und Ereignisübergänge nur simuliert.
+- Alle vier lesenden Aktualisierungsaktionen und 23 Bedingungsfälle auf Homey erfolgreich geprüft. Auslöser nicht am echten Gerät ausgelöst und gespeicherte Flows nicht ausgeführt.
+- Echte VR300-Verbindung, Status/Akku/Stations-/Ladeflags, Modus, Navigation, Firmware, technisches Modell, Ladezähler und Hinweise geprüft. Native Werte stimmen mit den App-Einstellungen überein.
+- Sechs Bereiche eingelesen, vollständige und gefilterte Flow-Auswahlvorschläge geprüft. Ungespeicherter Entwurf verändert die gespeicherte Auswahl nicht. Speichern erscheint in der nativen Liste; Rücksetzen dort und Aktualisieren der App-Einstellungen ergibt wieder die ursprüngliche Auswahl.
+- Zusatzinformationen und deaktivierten gespeicherten Zeitplan mit zwei Einträgen gelesen, ohne ihn zu aktivieren oder zu verändern.
+- 20 Verlaufseinträge, letztes Ergebnis, Flächen-/Dauer-/Datumsanzeigen, gespeicherte Karte und einzelnes Reinigungsbild geprüft. Beide echten Kartenbilder sind gültige PNG-Dateien innerhalb des Größenlimits. Ungültige Geräte-/Bildkennungen werden zurückgewiesen.
+- Version 0.2.2 installiert und offizielle publish-Prüfung bestanden. Gerät, alle 23 Fähigkeiten, Konto und Auswahl erhalten. Drei normale Flows und ein Advanced Flow unverändert; alle 14 bestehenden Kartenreferenzen verfügbar.
+- Kein Start-, Pause-, Fortsetzen-, Stop- oder Rückkehrbefehl gesendet. Der Roboter blieb während der echten Prüfungen auf der Station und meldete Laden.
+- Prüfbelege außerhalb des öffentlichen Quellordners: homey-vr300-regression-live.json, homey-vr300-regression-compatibility.json, homey-vr300-regression-lifecycle.json und homey-vr300-regression-selection.json. Echte Smartphone-, Bewegungs- und VR200-Hardwaretests bleiben offen.
+
+Bestätigter vorheriger Prüfstand für 0.2.1:
+- VR200-Modellprofil ergänzt: Grundsteuerung mit fünf Tasten, Status, Akku, Stations-/Ladeflags, gemeldeter Reinigungsmodus, Firmware/Modell und gespeicherter Zeitplan. Zusätzliche Geräteinformationen werden bei ausdrücklich angebotenem Dienst zugelassen.
+- Das basic-1-Startformat enthält nur category2, mode und modifier. Karten-, Bereichs- und Navigationsparameter werden abgewiesen; kein stiller Vollflächen-Fallback. Die VR300-Startlogik bleibt erhalten.
+- Neue VR200-Geräte erhalten 15 Kernfähigkeiten statt der 23 VR300-Fähigkeiten. Nicht unterstützte Funktionen und passende neue Flow-Angebote sind ausgeblendet. Bereits vorhandene Fähigkeiten und sämtliche bisherigen Flow-IDs/Argumente werden erhalten.
+- 212 von 212 App-Tests bestanden, darunter die strikte SDK-Regression für die Bereichstaste und zusätzliche Reparatur-/History-Recovery-Fälle. 16 Offline-Oberflächentests bestanden, einschließlich Modellansichten, verborgener alter Daten und unterbundener VR200-Bildabfragen.
+- Die erste Installation 0.2.0 machte das bestehende VR300-Gerät wegen „Invalid Capability: kobold_start_area“ vorübergehend nicht verfügbar. Die eng begrenzte Korrektur 0.2.1 ist installiert; Homey meldet das Gerät wieder als verfügbar.
+- Bestehendes Gerät, alle 23 Fähigkeiten, gespeicherte Auswahl und Kontoanmeldung erhalten. Die Definitionen von drei normalen Flows und einem Advanced Flow sind unverändert. Alle 14 gespeicherten Kartenreferenzen lösen auf; 20 Verlaufseinträge bleiben lesbar.
+- Während dieser Prüfung wurden keine Bewegungsbefehle gesendet. Ein bereits unabhängig laufender Auftrag wurde beobachtet; anschließend meldete der Roboter wieder Andocken und Laden.
+- VR200-Anmeldung, Startformat und Funktionsumfang sind mit simulierten Antworten geprüft. Es wurde kein echter VR200 verbunden oder bewegt; ein Hardwaretest bleibt offen. Schmale Browser- und CSS-Darstellungen sind kein echter Smartphone-App-Test.
+- Belege außerhalb des öffentlichen Quellordners: homey-vr200-compatibility.json, homey-vr200-lifecycle.json und homey-vr200-vorschau.png.
+
+Bestätigter vorheriger Prüfstand für 0.1.9:
+- Native Bereichsliste „Bereich“ und separate zustandslose Taste „Bereich starten“ ergänzt. Eine Auswahl speichert nur den Bereich; kein Bereich wird automatisch als erster ausgewählt.
+- Native Liste und App-Einstellungen verwenden dieselbe gespeicherte Auswahl. Fehlende oder entfernte Bereiche führen niemals zu einem Start der gesamten Fläche. Der ausdrückliche Start prüft Bereich und Stationszustand erneut.
+- 189 von 189 App-Tests bestanden, darunter 104 Integrationstests. Geprüft sind unter anderem Initialisierung ohne Bewegung, gespeicherte Auswahl, Auswahlwechsel unmittelbar vor Start, doppelte Bereichs-IDs auf mehreren Karten, fehlende/veraltete Auswahl, vorübergehende Katalogfehler, Reparatur und vermiedene identische Optionsaktualisierungen.
+- Offizielle technische Prüfung auf Stufe publish bestanden. Version 0.1.9 auf Homey Self-Hosted 13.5.1 installiert; 23 Gerätefähigkeiten, davon sechs zustandslose Tasten. Alle bisherigen 21 Fähigkeiten bleiben erhalten.
+- Sechs echte Reinigungsbereiche eingelesen und die bisherige gespeicherte Auswahl erhalten. Kontoanmeldung wiederhergestellt; 20 Verlaufseinträge weiterhin lesbar.
+- Echte Homey-Geräteansicht geprüft: sechs Tasten einschließlich „Bereich starten“ und sechs Bereiche mit zusätzlicher Platzhalteroption. Ein Auswahlwechsel wurde gespeichert und die ursprüngliche Auswahl wiederhergestellt. Der Roboter blieb dabei angedockt und meldete Laden; ein Reinigungsstart wurde nicht ausgelöst.
+- Drei normale Flows und ein Advanced Flow mit unveränderten gespeicherten Definitionen erhalten. Alle 14 bisherigen Flow-Kartenreferenzen lösen weiterhin auf; bisherige IDs und Argumente sind erhalten.
+- Während dieser Prüfung wurden keine Bewegungsbefehle gesendet. Der Startlistener wurde nur simuliert geprüft; ein neuer echter Bereichslauf wird nicht behauptet.
+- Belege außerhalb des öffentlichen Quellordners: homey-native-area-compatibility.json und homey-native-area-lifecycle.json.
+
+Bestätigter vorheriger Prüfstand für 0.1.8:
+- Native Bedienung mit genau fünf Tasten: Starten, Pausieren, Fortsetzen, Stoppen und Zur Station. Der nur lesbare Roboterstatus ist im nativen Sensorbereich von der Bedienung getrennt; der bisherige kombinierte Picker wird verborgen.
+- Starten kann wie bisher einen pausierten Auftrag fortsetzen. Fortsetzen führt ausschließlich einen pausierten Auftrag weiter und beginnt keine neue Reinigung. Pausieren erhält den Auftrag, Stoppen beendet ihn.
+- Alle bisherigen 16 Gerätefähigkeiten bleiben erhalten; fünf neue Tasten ergeben 21. Die 29 bestehenden App-Flow-Karten bleiben unverändert. Sechs ausdrücklich registrierte, als veraltet markierte Kompatibilitätskarten mit ursprünglichen IDs und Listenern ergeben insgesamt 35 Karten: 14 Aktionen, 12 Bedingungen und 9 Auslöser.
+- Die bisherige Status-Capability und ihre Enum-IDs bleiben bestehen. Das SDK löst ihren Zustandsänderungsauslöser automatisch aus; ein zweiter ausdrücklicher Triggeraufruf wird nicht ergänzt.
+- 182 von 182 App-Tests bestanden, darunter 97 Integrationstests. Die abschließende offizielle Prüfung auf Stufe publish ist ohne Warnungen bestanden.
+- Version 0.1.8 auf Homey Self-Hosted 13.5.1 installiert. Bestehendes Gerät, gespeicherte Bereichsauswahl, Kontoanmeldung sowie drei normale Flows und ein Advanced Flow erhalten. Die Hashes ihrer gespeicherten Definitionen blieben unverändert; 20 Verlaufseinträge sind weiterhin lesbar.
+- Alle 14 zuvor gespeicherten Flow-Kartenreferenzen wurden nach dem Update mit ihrer vollständigen ID lesend aufgelöst. IDs und Argumente der bisherigen Kompatibilitätskarten sind erhalten. Dies prüft zusätzlich zur unveränderten Flow-Definition die tatsächliche Verfügbarkeit der referenzierten Karten.
+- Die Plattform meldet genau fünf zustandslose Tasten, den ausgeblendeten bisherigen Picker und den nur lesbaren Status. Im echten Homey-Browser waren die fünf benannten Tasten sichtbar; der alte Picker war verschwunden und die getrennte Sensoransicht mit Status wurde angezeigt.
+- Für diese Versionsprüfung wurden keine Bewegungsbefehle gesendet. Weder neue native Tasten noch bisherige bewegende Flow-Aktionen wurden am echten Roboter ausgeführt; ihre Listener wurden mit simulierten Befehlen geprüft. Ein neuer echter Bewegungsablauf und ein echter Smartphone-Test werden nicht behauptet.
+- Die Belege liegen außerhalb des öffentlichen Quellordners in homey-controls-compatibility.json und homey-controls-lifecycle.json.
+
+Bestätigter vorheriger Prüfstand 0.1.7:
+- Neue Anzeige: Die gewählte gespeicherte Karte wird beim Öffnen von Verlauf und Karten automatisch angefordert; der Abschnitt ist standardmäßig geöffnet. Das Bild einer einzelnen Reinigung wird beim Aufklappen ihres Eintrags geladen.
+- Keine Sammelabrufe aller Verlaufsbilder im Hintergrund; temporärer Oberflächencache mit höchstens einem gespeicherten Kartenbild und einem Reinigungsbild je Roboter.
+- Die bestehende private Speicherung signierter Bildadressen für höchstens 15 Minuten und die Bildprüfungen im Backend bleiben erhalten. Das Anzeigen von Karten startet keine Reinigung.
+- 169 von 169 App-Tests und 12 von 12 Offline-DOM-Tests der automatischen Kartenanzeige bestanden. Die offizielle publish-Prüfung, Installation und echte Sichtprüfung von 0.1.7 sind abgeschlossen; Einzelheiten stehen im abschließenden Ergebnisabschnitt.
+- Der native Homey-Picker bleibt in 0.1.7 unverändert. Er zeigt den groben Zustand und sendet bei Auswahl einen Befehl; eine Umstellung auf getrennte native Anzeige und Tasten wurde nicht vorgenommen.
+
+Automatisierte Prüfungen des bestätigten Ausgangsstands 0.1.6:
+- 169 App-Tests bestanden: Homey-Integration, Cloud-Verbindung, Konto/Verlauf/Bilder, Zusatzdaten, Zeitplan und Zustandsauswertung.
+- 14 zusätzliche Offline-Tests der tatsächlichen Anmelde- und Reparaturformulare bestanden; deutsche und englische Texte berücksichtigt.
+- Die Tests verwenden künstliche Cloud-Antworten und eine simulierte Homey-Umgebung. Sie versenden keine E-Mail-Codes und bewegen keine echten Roboter.
+- Geprüft sind unter anderem gespeicherte Anmeldung nach Neustart, Token-Erneuerung und Kontotrennung, Verbindungsfehler, Begrenzungen und Zeitüberschreitungen, unbekannte Werte, Reparatur während laufender Abfragen, begrenzte Bildverarbeitung und unterdrückte Wiederholung historischer Flow-Ereignisse.
+- Zusätzliche Regression für den Erhalt eines beobachteten Reinigungslaufs bei zwischenzeitlich fehlender Befehls-Statusabfrage.
+- SDK 3, lokale Homey-Plattform, Cloud-Verbindung, keine weitreichenden Homey-API-Berechtigungen und keine npm-Laufzeitabhängigkeiten.
+- Manifest: 10 Aktionen, 11 Bedingungen, 8 Auslöser und 16 Gerätefähigkeiten.
+
+Bisher an einem echten VR300 und Homey Self-Hosted geprüft:
+- Anmeldung, Reparatur, Grundsteuerung und vollständig automatischer Ablauf aus Start, Pause, Rückkehr und Andocken.
+- Vollständige Reinigung eines gespeicherten Bereichs mit örtlicher Beobachtung, selbstständiger Rückkehr und gemeldetem Laden.
+- Bereichsliste und Auswahlvorschläge, zusätzliche Geräteangaben und lesende Zeitplananzeige.
+- Reinigungsverlauf, gespeicherte Karten, beide Kartenbildarten und lesende Flow-Aktionen und -Bedingungen.
+Diese früheren Bewegungsprüfungen werden für die neue Kartenanzeige nicht wiederholt.
+
+Die Prüfbelege für Version 0.1.6 liegen außerhalb des verteilbaren Quellordners:
+- Offizielle technische Homey-Prüfung auf Stufe publish bestanden.
+- Bestehendes Gerät, Bereichsauswahl, Flows und Kontoanmeldung beim Update erhalten.
+- Überarbeitete deutsche und englische Oberfläche sowie Bezeichnungen und Datenschutzinformationen geprüft.
+- Lokale Browser-Vorschauen mit Testdaten und zusätzliche Offline-Prüfungen der Formulare und Einstellungsseite.
+Während dieser Veröffentlichungsprüfungen wurden keine Bewegungsbefehle gesendet.
+
+Verbleibende Beta-Prüfziele:
+- Tatsächliche Nutzer-Flows bei neuen echten Reinigungs-, Status- und Modusereignissen, langfristiger Ablauf und Erneuerung echter Kontotoken sowie echte Netzwerkausfälle.
+- Echte Homey-Smartphone-App, echter Wechsel des Homey-Designs, zusätzliche Roboter/Konten und Homey Pro.
+- Weitere Reinigungsbereiche und eine vollständige Reinigung des gesamten Zuhauses.
+
+Vorbereitung für den Homey App Store:
+- App-Name, Entwickler, kurze deutsche/englische Store-Texte, allgemeine Dokumentation und Datenschutzbeschreibung überarbeitet.
+- Store-Texte auf jeweils zwei kurze reine Textabsätze ohne URLs und ohne vollständige Tasten-/Funktionsliste gekürzt. Nicht bestätigte VR200-Hardwarekompatibilität bleibt ausdrücklich benannt.
+- README.md und Datenschutzbeschreibung verweisen auf das vom Nutzer benannte öffentliche Repository SornyKonst/Homey-App-Vorwerk-Kobold und dessen GitHub-Issues. Supportmeldungen werden nicht automatisch versandt; öffentliche Berichte sollen keine Zugangsdaten oder identifizierenden Grundrisse enthalten.
+- Eigenständiges Geräteicon und Markenicon aus offizieller Quelle mit Herkunftshinweis.
+- Die Abmessungen der Rasterbilder sind korrekt. Die mitgelieferten gezeichneten App-/Gerätebilder bleiben ein Punkt für die gestalterische Prüfung. Fotovorschläge liegen separat; ihre Verwendung im öffentlichen Store ist nicht freigegeben.
+- Erreichbarkeit und Inhalt der öffentlichen Repository-/Supportlinks, tatsächlicher Herausgeber im Athom-Konto und Verfügbarkeit der unveränderten App-ID im Entwicklerportal sind vor Einreichung zu prüfen. Manifest-Autor und tatsächlicher Store-Herausgeber sind getrennte Angaben.
+- Kein Store-Upload, keine Testveröffentlichung, kein Zertifizierungsantrag und keine Veröffentlichung erfolgt. Eine bestandene publish-Prüfung ist keine Store-Freigabe.
+
+Ergebnisse für 0.1.6:
+- 169 von 169 App-Tests, 14 von 14 Offline-Formulartests und offizielle publish-Prüfung bestanden.
+- Version 0.1.6 auf Homey installiert. Gerät, gewählter Bereich, drei normale Flows, ein Advanced Flow und alle 16 Gerätefähigkeiten erhalten.
+- Kontoanmeldung ohne erneute Eingabe wiederhergestellt; 20 Verlaufseinträge sowie beide PNG-Kartenbildarten erneut abgerufen.
+- Die lesende Aktualisierungs-Flow-Karte und fünf Prüffälle für drei Verlaufsbedingungen bestanden; der Verlaufsauslöser ist registriert und simuliert geprüft.
+- Lokale Browser-Vorschau: Deutsch bei 320 Pixeln, Englisch bei 375 Pixeln sowie helle und dunkle CSS-Darstellung; Verbindungsfehler, leere Daten, fehlende Geräte, erforderliche Anmeldung und teilweise verfügbare Daten geprüft.
+- Bei unbekanntem Andockzustand blieb der Bereichsstart gesperrt. Rückmeldungen wurden beim jeweiligen Vorgang ohne doppelten Hinweis angezeigt. Karten öffneten innerhalb der Seite, nach dem Schließen kehrte der Fokus zurück.
+- Sichtprüfung der neuen Einstellungsseite und nativen Gerätebezeichnungen direkt im angemeldeten Homey-Browser bestanden. Beide Kartenbilder öffneten innerhalb der Seite mit bestätigter Fokusrückkehr.
+- Von Homey überschriebene Stile wurden korrigiert und im echten Homey nachkontrolliert: grüne Startschaltfläche mit weißer Schrift und 44 Pixel Höhe; Beschriftungen mit 14 Pixeln in normaler Schreibweise.
+- Erste Reparaturansicht im echten Homey bestätigt: vorgesehener E-Mail-Schritt ohne ausgefüllte Daten und ohne Codeanforderung. Der vollständige neue Formularablauf wurde offline geprüft; eine neue echte Anmeldung wurde dafür nicht ausgelöst.
+- Die schmalen und dunklen Vorschauen sind Simulationen; eine echte Smartphone- oder Homey-Designwechsel-Prüfung ist damit nicht belegt.
+- Keine Bewegungsbefehle während der Prüfung dieser Version. Eine Store-Freigabe wird nicht behauptet.
+
+Ergebnisse für 0.1.7:
+- 169 von 169 App-Tests, 12 von 12 Offline-DOM-Tests zur automatischen Kartenanzeige und offizielle Homey-Prüfung auf Stufe publish bestanden.
+- Version 0.1.7 auf Homey Self-Hosted 13.5.1 installiert. Gerät, gespeicherte Bereichsauswahl, drei normale Flows, ein Advanced Flow, alle 16 Gerätefähigkeiten und Kontoanmeldung erhalten.
+- 20 Verlaufseinträge sowie beide PNG-Kartenbildarten erneut abgerufen. Die lesende Aktualisierungs-Flow-Karte und fünf Fälle für drei Verlaufsbedingungen bestanden. Die Belege liegen außerhalb des Quellordners in homey-auto-map-lifecycle.json und homey-auto-map-images.json.
+- Lokale Browser-Vorschau mit Testdaten: Deutsch bei 320 Pixeln mit hellem CSS und Englisch bei 375 Pixeln mit dunklem CSS; automatische Kartenanzeige, Wechsel von Karte A zu B und zurück zu A sowie Aufklappen eines Reinigungsbilds geprüft. Kein horizontaler Überlauf und kein unerwarteter Sprung von Scrollposition oder Fokus beobachtet.
+- Im echten Homey-Browser wurde die gespeicherte Karte ohne zusätzliche Bildschaltfläche automatisch geladen. Nach dem Aufklappen einer einzelnen Reinigung wurde auch deren Bild automatisch geladen; der Fokus blieb auf der Zusammenfassung des Eintrags. Beide Bildtypen waren vollständig geladen und besaßen gültige natürliche Bildabmessungen.
+- Keine Bewegungsbefehle während Update, Datenprüfungen und Sichtprüfung dieser Version. Frühere echte Reinigungsprüfungen wurden nicht wiederholt.
+- Die schmalen und dunklen Vorschauen ersetzen keinen Test auf einem echten Smartphone und keinen echten Homey-Designwechsel. Die allgemeinen Beta- und Store-Punkte oben bleiben offen. Es wurde keine Store-Freigabe oder weitergehende Rückwärtskompatibilität behauptet.

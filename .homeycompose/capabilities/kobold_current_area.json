@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Current job area",
+    "de": "Bereich des Auftrags"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/status.svg"
+}
